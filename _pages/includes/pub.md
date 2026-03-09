@@ -17,8 +17,8 @@ Wenfeng Song, **Zhenyu Lv**, Xuan Wang, Xia Hou (**First student author**)
 <div class='paper-box'><div class='paper-box-image'><div><div class="badge">ESWA 2026</div><img src='images/eswa.png' alt="didd" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
-[JCR Q1 Top] [Bridging the Gap Between Data Distribution and Model: Dynamic Data Distribution Optimization for Improving Critique Capabilities of Large Language Models](https://www.sciencedirect.com/science/article/pii/S0957417425034931) \\
-Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, Zhenyu Lv<sup>†</sup>, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang*, Bin Hu
+**[JCR Q1 Top]** [Bridging the Gap Between Data Distribution and Model: Dynamic Data Distribution Optimization for Improving Critique Capabilities of Large Language Models](https://www.sciencedirect.com/science/article/pii/S0957417425034931) \\
+Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, **Zhenyu Lv<sup>†</sup>**, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang*, Bin Hu (First author)
 
 - Proposes DIDD, a dynamic iterative data distribution optimization framework that detects model's vulnerable data distributions and builds tailored training datasets, solving the static data-model mismatch in LLM critique.
 - Systematically analyzes the impact of data type and text quality distributions on LLM critique ability, deriving heuristic optimal distribution guidelines for single/pair-wise critique tasks.
