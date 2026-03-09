@@ -8,7 +8,7 @@
 # Site Settings
 title                    : "Zhenyu Lv (吕镇宇)"
 description              : "Focusing on LLM, Multimodal AI"
-repository               : "rayeren/rayeren.github.io"
+repository               : "MMMDY/MMMDY.github.io"
 google_scholar_stats_use_cdn : true
 
 # google analytics
@@ -24,7 +24,7 @@ author:
   name             : "Zhenyu Lv (吕镇宇)"
   avatar           : "images/ry_profile.jpeg"
   bio              : ""
-  location         : "Singapore"
+  location         : "Beijing"
   employer         :
   pubmed           : 
   googlescholar    : "https://scholar.google.com/citations?user=ButrlDwAAAAJ"
