@@ -6,4 +6,4 @@
 
 # 💻 Internships
 
-- *2024.08 - 2024.10*, [Digital China](https://www.digitalchina.com/), Beijing.
+- *2024.08 - 2024.10*, [Digital China](https://www.digitalchina.com/), AI Researcher.

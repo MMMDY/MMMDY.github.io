@@ -1,0 +1,1258 @@
+Contents  lists available  at ScienceDirect
+Expert  Systems  With  Applications
+journal  homepage:  www.elsevier.com/locate/eswa
+Bridging  the gap between  data  distribution  and model:  Dynamic  data  
+distribution  optimization  for improving  critique  capabilities  of large  
+language  models  
+Chen Xu
+a,b,1, Tian Lan
+c,1, Zhenyu  Lv
+a,b,1, Qunxi  Dong
+a,b,∗, Jieshuo  Zhang
+b,d, 
+Heyan  Huang
+c, Minqiang  Yang
+e,∗, Bin Hu
+a,b,∗
+aKey Laboratory  of Brain Health Intelligent  Evaluation  and Intervention,  Ministry of Education  (Beijing Institute of Technology),  100081, Beijing, China
+bSchool of Medical Technology,  Beijing Institute of Technology,  100081, Beijing, China
+cSchool of Computer  Science and Technology,  Beijing Institute of Technology,  100081, Beijing, China
+dSchool of Electronics  and Information  Engineering,  Hebei University,  071002, Hebei, China
+eSchool of Information  Science and Engineering,  Lanzhou University,  730000, Lanzhou, China
+a r t i c l e  i n f o
+Keywords:
+Critique ability
+Automatic  evaluation
+Large language  models a b s t r a c t
+Critique  ability, deﬁned as the capacity  to identify and rectify ﬂaws in text generation,  is crucial for the ap-
+plications  of Large Language  Models (LLMs). As a meta-cognitive  capability,  enhancing  the critique ability of 
+LLMs poses signiﬁcant  challenges.  Recent studies have proposed  improving  this ability through  ﬁne-tuning  on 
+critique datasets.  However,  the static data distribution  of existing datasets  often leads to a mismatch  between  
+the training  data and the diverse optimization  needs of target models, thereby hindering  their eﬀectiveness.  To 
+address this issue, we introduce  a novel Dynamic  Iterative  Data Distribution  Optimization  Method (DIDD) that 
+dynamically  adjusts training  data distributions  to align with the speciﬁc optimization  requirements  of target 
+models. Speciﬁcally,  DIDD detects the vulnerable  data distribution  of target optimization  models by conducting  
+the meta-critique  on synthesized  test set. The detected  vulnerable  data distribution  are then leveraged  to con-
+struct the training  dataset that aligns with target model more closely, improving  the eﬀectiveness  of the training  
+dataset. Extensive  experimental  results across four benchmarks  demonstrate  that our proposed  DIDD eﬀectively  
+alleviates  the mismatch  between  the training  dataset and target optimization  models.
+1.  Introduction
+The critique  ability has been widely used in automatic  evaluation  
+and self-improvement  of Large Language  Models  (LLMs) (Lan et al., 
+2024b ; Wu et al., 2024 ), aiming to detect and revise ﬂaws in generated  
+text. Recent works have demonstrated  that only advanced  and large-
+scale LLMs exhibit reliable  critique  ability (Lan et al., 2024b ; Lin et al., 
+2024a ), while their inference  eﬃciency  are usually  ineﬃcient.  There-
+fore, numerous  works propose  to improve  the critique  ability of eﬃcient  
+LLMs by ﬁne-tuning  on critique  datasets  (Kim et al., 2024a ; Lan et al., 
+2024a ; Zheng et al., 2023b ). As a meta-cognition  ability of LLMs (Toy 
+et al., 2024 ; Wang & Zhao , 2024 ), critique  ability is complex,  and it 
+remains  challenging  to improve  it (Lan et al., 2024b ; Lin et al., 2024a ).
+Early studies primarily  rely on human-annotated  critique  datasets  
+to optimize  models,  such as Shepherd  (Wang et al., 2023b ) and Crit-
+∗Corresponding  authors.
+ E-mail addresses:  chenxu05037@bit.edu.cn  (C. Xu), lantiangmftby@gmail.com  (T. Lan), lvzhenyu0@gmail.com  (Z. Lv), dongqx@bit.edu.cn  (Q. Dong), 
+zhangjieshuo@126.com  (J. Zhang), hhy63@bit.edu.cn  (H. Huang),  yangmq@lzu.edu.cn  (M. Yang), bh@bit.edu.cn  (B. Hu).
+1Equal Contribution.icGPT (McAleese  et al., 2024 ). However,  human-annotated  critiques  are 
+extremely  costly and diﬃcult  to scale. Therefore,  recent works propose  
+to synthesize  training  dataset  using advanced  LLMs (e.g., GPT-4)  (Cui 
+et al., 2023 ; Hellwig  et al., 2025 ; Li et al., 2024b ). However,  the per-
+formance  of ﬁne-tuned  model is signiﬁcantly  constrained  by the quality 
+of the training  data, with the distribution  of the data emerging  as a 
+critical bottleneck  aﬀecting  model performance,  such as data type dis-
+tribution  and evaluated  text quality distribution.  Whether  the dataset  is 
+human-annotated  or synthetic  data, the data distributions  of most ex-
+isting datasets  are static, which may not be well-suited  for target opti-
+mization  models.  For instance,  a target optimization  model may perform  
+poorly on critiquing  medium-quality  generated  text, while the train-
+ing dataset  primarily  contains  low-quality  and high-quality  generated  
+text. This imbalance  in data distribution  leads to suboptimal  training,  
+as the model is less exposed  to the critique  of mid-tier  quality content,
+https://doi.org/10.1016/j.eswa.2025.129878
+Received  20 April 2025; Received  in revised form 2 August 2025; Accepted  23 September  2025Expert  Systems  With Applications  300 (2026)  129878  
+Available  online  10 October  2025  
+0957-4174/©  2025  The Authors.  Published  by Elsevier  Ltd. This is an open access  article  under  the CC BY-NC-ND  license  ( http://creativecommons.org/licenses/by-  
+nc-nd/4.0/  ). 
+
+C. Xu et al.
+impairing  its overall critique  versatility.  In such cases, the ﬁne-tuned  
+target model still lacks adequate  critique  capability  for medium-quality  
+generated  text, signiﬁcantly  reducing  the eﬀectiveness  of the used train-
+ing dataset.
+To address  this challenges,  this paper proposes  a novel Dynamic
+Iterative  Data Distribution  Optimization  Method  (DIDD),  which dynam-
+ically optimizing  and data distribution  tailored  to target optimization  
+models.  Speciﬁcally,  DIDD dynamically  generates  high-quality  synthetic  
+data and optimizes  the model through  the following  four steps: 1) Syn-
+thesize test samples  based on the initial data distribution  and collect 
+the inference  results of target model; 2) Conduct  meta-critique,  which 
+assesses  target model’s  outputs  against  reference  test samples,  counts 
+the error rates and detects the vulnerable  data distributions;  3) Mixture  
+the initial data distribution  with vulnerable  data distributions,  which 
+is used to construct  the training  dataset  tailored  for target model; 4) 
+Optimize  the target model on the training  dataset  and proceed  to the 
+next iteration  of data generation  and optimization.  The data synthesis  
+and model optimization  processes  in DIDD are dynamic,  enabling  eﬀec-
+tively tracking  of the model’s  vulnerable  data distributions  and targeted  
+enhancement.
+In this paper, we systematically  analyze  two crucial types of data 
+distribution  in critique:  1) Data Type Distribution : Diverse  data types 
+are crucial for improving  model generalization  capabilities  (Li et al., 
+2024b ; Ouyang  et al., 2022b ); 2) Quality  Distribution  of Generated  
+Text: Previous  works have demonstrated  that the quality of evaluated  
+text inﬂuences  the critique  ability of LLMs (Lan et al., 2024b ). It is worth 
+noting that while this study focuses  on these two data type distributions,  
+the DIDD method  is ﬂexible  and can be extended  to any speciﬁc  data 
+distribution  settings.
+Extensive  experimental  results on four widely-used  critique  bench-
+marks demonstrate  the superiority  of our proposed  DIDD method.  In-
+ternLM2-7B-Chat  and Llama3-8B-Instruct  models  that ﬁne-tuned  by our 
+DIDD methods  signiﬁcantly  outperforms  existing  7B-13B  baselines  on 
+single-wise  and pair-wise  evaluation  protocols,  indicating  the better 
+quality of our generated  datasets  than previous  works. Moreover,  ab-
+lation studies prove the contributions  of detected  vulnerable  data dis-
+tribution  of target optimization  model during ﬁne-tuning.  Finally,  our 
+proposed  DIDD also exhibit better data eﬃciency  than previous  data 
+synthesize  methods.  The contributions  of our work are three-fold:
+•We conduct  the systematic  analysis  about the inﬂuence  of data dis-
+tribution  on model’s  critique  ability.
+•We propose  a novel DIDD method  to address  the issue of the mis-
+match between  the critique  training  dataset  and target optimization  
+model.
+•Extensive  experimental  results demonstrate  the eﬀectiveness  of our 
+proposed  DIDD method  on both single-wise  and pair-wise  critique  
+tasks. Our 7B critique  models  ﬁne-tuned  by DIDD signiﬁcantly  out-
+performs  existing  7B-13B  state-of-the-art  baselines.
+2.  Related  work
+Critique  ability of LLMs. Recently,  the critique  ability of LLMs has been 
+widely applied  in two scenarios.
+(1)Automatic  evaluation  of generated  text (Saunders  et al., 2022 ; Tian 
+et al., 2024 ; Zheng et al., 2023b ): GPTScore  (Fu et al., 2023 ) and 
+G-Eval (Liu et al., 2023 ) propose  to leverage  LLMs to evaluate  qual-
+ity of generated  text by designing  the evaluation  prompt  and gen-
+erating  the chain-of-thought  explanation,  which signiﬁcantly  out-
+performs  the several automatic  evaluation  paradigm  (Wang et al., 
+2023a ), such as heuristic  automatic  evaluation  (Banerjee  & Lavie , 
+2005 ; Lin, 2004 ; Papineni  et al., 2001 ), embedding-based  automatic  
+evaluation  (Zhang et al., 2020 ) and learning-based  automatic  evalu-
+ation (Huang et al., 2020 ; Lan et al., 2020 ; Tao et al., 2017 ; Zhang 
+et al., 2022 );(2)Self-improvement  of LLMs: the critique  ability is also widely used in 
+improving  the LLM’s general  capability  without  any human super-
+vision. For example,  Self-Rewarding  (Yuan et al., 2024 ) and Meta-
+Rewarding  (Wu et al., 2024 ) synthesize  the preference  dataset  using 
+LLM itself as the judge model, which are then used to ﬁne-tune  the 
+LLMs with DPO method  (Rafailov  et al., 2023 ).
+Improve  critique  ability. Numerous  works demonstrate  that critique  abil-
+ity of LLMs also exhibit the scaling phenomena  (Kaplan et al., 2020 ), 
+and advanced  and large-scale  LLMs exhibit much better critique  abil-
+ity than small-scale  models.  However,  the expensive  inference  cost of 
+large-scale  LLMs hinders  their application  in large-scale  evaluation  sce-
+narios. Therefore,  numerous  works propose  to improve  the critique  abil-
+ity of eﬃcient  LLMs by ﬁne-tuning  them on the constructed  critique  
+dataset.  For example,  Auto-J (Li et al., 2024b ), UltraCM  (Cui et al., 
+2023 ) and Prometheus  (Kim et al., 2024a ) optimize  the small-scale  
+open-source  LLMs, like Llama series models,  by conducting  the super-
+vised ﬁne-tuning  on synthesized  dataset  generated  by GPT-4. Moreover,  
+Themis  (Hu et al., 2024 ), SFR-Judge  (Rafailov  et al., 2024 ), MultiCri-
+tique (Lan et al., 2024a ) Critic-RM  (Yu et al., 2024 ) leverages  the pref-
+erence learning  methods,  like DPO and Reinforcement  Learning  (RL), 
+to optimize  the critique  ability by distinguishing  the good and bad cri-
+tiques.
+Training  Data Source. Based on the source of the training  dataset,  exist-
+ing works could be classiﬁed  into three categories:
+(1)Human-annotated  Dataset:  This method  has demonstrated  eﬀective-
+ness in improving  critique  ability, as exempliﬁed  by Shepherd  (Wang 
+et al., 2023b ) and CriticGPT  (McAleese  et al., 2024 ). While human-
+annotated  datasets  are eﬀective,  their expensive  annotation  cost hin-
+ders their scalability,  especially  for annotating  the long critique  text.
+(2)Synthetic  Dataset:  This method  improves  the critique  capability  of 
+LLMs by mimicking  advanced  LLM’s behavior,  like GPT-4 (Li et al., 
+2024b ). Although  this kinds of methods  could easily scale up, the 
+generated  training  samples  might contains  the noise, inﬂuencing  
+their eﬀectiveness  (Verga et al., 2024 ).
+(3)Human-Model  collaborative  Dataset:  recently,  numerous  works con-
+struct the critique  dataset  by validating  the model-generated  samples  
+with human-annotated  labels, SFR-Judge  (Wang et al., 2024 ), Critic-
+RM (Yu et al., 2024 ) and SCRIT (Tang et al., 2025 ). This method  
+achieves  a balance  between  data construction  quality and the hu-
+man annotation  cost. However,  they are still limited  by the human 
+annotation,  making  them hard to scale up.
+The data distributions  of these three kinds of datasets  are static, lead-
+ing to a mismatch  with the target optimization  model. This paper pro-
+pose to address  this problem  by dynamically  adjusting  the data distri-
+bution during model optimization.  Since Human-annotated  Dataset  and 
+Human-model  collaborative  Dataset  are not ﬂexible  and hard to scale 
+up, we only conduct  experiments  on the Synthetic  Dataset.
+Active Learning.  Similar  to our proposed  DIDD method,  active learning  
+(AL) has long been studied  as a paradigm  to reduce annotation  costs by 
+selectively  querying  the most informative  samples  for labeling  (Settles , 
+2009 ). For example,  recent advances  in deep active learning  (DAL) in-
+tegrate neural networks  with sophisticated  sampling  strategies,  such as 
+uncertainty,  diversity,  and hybrid approaches,  signiﬁcantly  improving  
+performance  in image classiﬁcation  and natural  language  processing  (Li 
+et al., 2024a ). More recently,  generative  AI has begun to reshape  AL 
+frameworks  by synthesizing  high-quality  training  instances  or simulat-
+ing diverse  scenarios,  reducing  reliance  on real labeled  data (ElSayary , 
+2024 ). Hybrid approaches  combining  LLM-based  reasoning  with tradi-
+tional AL criteria–such  as entropy  or margin  sampling–are  emerging  as 
+promising  directions  to improve  query quality and model generaliza-
+tion (Rouzegar  & Makrehchi , 2024 ). These integrations  not only lower Expert  Systems  With Applications  300 (2026)  129878  
+2 
+
+C. Xu et al.
+Table 1 
+The studied eight data type distribution.
+ Data Type Description
+ Text Summarization Summarization  tasks for Reddit posts, long documents,  and notes.
+ NLP Tasks Classic NLP tasks such as ranking, translation,  classiﬁcation,  topic modeling,  information  extraction,  key-
+word extraction,  reading comprehension,  Q&A, and question generation.
+ General Dialogue Common  dialogue topics between users and chatbots,  such as role-playing,  commonsense  Q&A, brainstorm-
+ing, and recommendations.
+ Creative  Writing Open-ended  writing scenarios,  such as songwriting,  advertisement  copywriting,  and speech scripting.
+ Code Generation Code-related  tasks, including  code simpliﬁcation,  code completion,  code translation,  and code correction.
+ Reasoning  Q&A Logical reasoning  tasks, such as solving math problems  and answering  reasoning-based  questions.
+ Functional  Writing Writing tasks with speciﬁc topics and requirements,  such as news writing, copy editing, and academic  
+writing.
+ Text Rewriting Tasks such as text simpliﬁcation,  text reﬁnement,  and text correction.
+Table 2 
+The studied three qualities  in single-wise  and pair-wise  critique protocols.
+ Critique  Type  Description
+ Single-wise  Low  The generated  text fails to eﬀectively  answer the user’s query and contains numerous  severe errors (1–3 points).
+ Medium  The generated  text partially answers the user’s query but still contains signiﬁcant  errors (4–6 points).
+ High  The generated  text accurately  answers the user’s query with almost no errors (≥7 points).
+ Pair-wise  Simple  A pair of generated  texts exhibits signiﬁcant  quality diﬀerences,  where the low-quality  text scores 1–3 and the high-quality  text scores ≥7.
+ Medium  A pair of generated  texts exhibits moderate  quality diﬀerences,  both containing  errors, with scores of 1–3 and 4–6, respectively.
+ Diﬃcult  A pair of generated  texts shows similar quality levels, both achieving  at least medium quality, making it challenging  to diﬀerentiate.
+Table 3 
+Training  hyper-parameters  for experiments  in prelimi-
+nary study.
+ Parameter  Value  Parameter  Value
+ Data Length  2048  Batch Size  1
+ Gradient Accu.  16  Training Epochs  2
+ Optimizer  AdamW  Learning Rate 2𝑒−4
+ Warmup Ratio  0.03  LoRA Dropout  0.1
+ LoRA 𝛼  16  LoRA Rank  64
+annotation  burdens  but also enable more interpretable  and cognitively  
+aligned  learning  processes.  
+While both DIDD and Active Learning  (AL) aim to optimize  model 
+performance  through  data selection,  DIDD diverges  fundamentally  in 
+two aspects:  (1) AL selects individual  instances  (e.g., ambiguous  sam-
+ples) to improve  model decision  boundaries.  DIDD operates  at the distri-
+bution granularity:  it identiﬁes  systematic  weaknesses  in data coverage  
+and dynamically  synthesizes  data to ﬁll gaps. This corrects  underlying  
+data biases rather than patching  localized  errors; (2) AL iterates  between  
+static data pools and model updates.  While DIDD creates a dynamic  pro-
+cess: each iteration’s  model optimization  reﬁnes the subsequent  data 
+synthesis,  progressively  aligning  distributions  with the model’s  evolving  
+capabilities.  This ensures  scalability  to complex  critique  tasks where AL 
+struggles  with distribution  shifts. 
+3.  Preliminary  study
+In this section,  we conduct  the preliminary  study to analyze  the dif-
+ference  among data distribution,  proving  the importance  of the data 
+distribution  for improving  critique  ability of LLMs.
+3.1.  Task formulation
+So far, there are two kinds of critique  protocol:  single-wise  and pair-
+wise critiques.
+Single-Wise  Critique.  aims to directly  critique  the quality of one gener-
+ated response  (𝑅) for a given the query 𝑄 based on the chosen evaluation  
+criteria  cri.: (𝑟, 𝑆) =CriticModel (𝑄, 𝑅, cri.), where 𝑟 is the textual ratio-
+nale for analyzing  the quality of 𝑅 (Zheng et al., 2023a ), and 𝑆 is the quality score reﬂecting  the overall quality of 𝑅 (Zheng et al., 2023b ). 
+The higher score indicates  better quality.
+Pair-wise  Critique.  is another  widely-used  critique  protocol  (Li 
+et al., 2024b ), aiming to distinguish  two generations  (𝑅𝐴, 𝑅𝐵) 
+and choose the better one given the evaluation  criteria  cri.: 
+(𝑟, 𝐿) =CriticModel (𝑄,cri., 𝑅𝐴, 𝑅𝐵), where 𝐿 is the preference  
+label that indicates  which generation  is better. Compared  with single-
+wise critique  protocol,  the pair-wise  critique  protocol  is more robust 
+and objective  (Li et al., 2024c ).
+3.2.  Analyze  the inﬂuence  of data distribution
+This subsection  aims to analyze  how two data distribution  in cri-
+tique training  data: data type distribution  and the quality distribution  
+of generated  texts, aﬀects the improvements  of LLM’s critique  ability, 
+and summarize  the high-quality  heuristic  data distribution,  which pro-
+vide supports  for our proposed  DIDD method.
+3.2.1.  Data distribution
+This study focuses  on analyzing  two crucial data distributions  for 
+single-wise  and pair-wise  critiques  in critique  datasets:  data type distri-
+bution and the quality distribution  of generated  text.
+Data type distribution.  As shown in Table 1, this section primarily  ana-
+lyzes the eight common  data types (Li et al., 2024b ).
+Quality distribution  of generated  texts. As shown in Table 2, in the single-
+wise critique  protocol,  the generated  text quality can be classiﬁed  into 
+low-quality,  medium-quality  and high-quality.  In the pair-wise  critique  
+protocol,  the quality can be categorized  into three kinds of diﬃculties:  
+simple-diﬃculty,  moderate-diﬃculty  and hard-diﬃculty.  This classiﬁ-
+cation provides  a more nuanced  understanding  of the critique  task and 
+helps evaluate  the model’s  performance  under varying  levels of text 
+quality and complexity.
+3.2.2.  Experimental  setup
+Evaluation  datasets  and metrics.  (1) Single-wise  Critique:  the experi-
+ments are conducted  on the CriticEval  (Lan et al., 2024b ) and the
+CriticBench  (Lin et al., 2024b ) benchmarks.  As for the CriticEval
+dataset,  the objective  evaluation  metric is the Spearman  correlation  Expert  Systems  With Applications  300 (2026)  129878  
+3 
+
+C. Xu et al.
+coeﬃcient,  evaluating  the consistency  between  model-generated  qual-
+ity scores (𝑆) and human-annotated  scores. The subjective  evaluation  
+metric evaluates  the quality of model-generated  text critiques  (𝑟) given 
+the human-annotated  critiques  as reference.  The subjective  evaluation  
+scores range from 1 to 10, where a higher score indicates  better per-
+formance  and quality of generated  critique  rational  (𝑟). Note that Crit-
+icEval  (Lan et al., 2024b ) systematically  validated  that GPT-4-based  
+evaluation  achieves  strong consistency  with human judgments,  given 
+the human-annotated  critiques  as references.  As for the CriticBench
+dataset,  the F1 score is used to judge the accuracy  of critique  model’s  
+decision  on the correctness  of generated  answers  on logical reasoning  
+tasks.
+(2) Pair-wise  Critique:  the pair-wise  critique  experiments  are con-
+ducted on CriticEval  benchmark.  The objective  metric for the pair-
+wise evaluation  is the Accuracy  of model’s  decision,  and subjective  eval-
+uation is also the judgment  provided  by GPT-4 with human-annotated  
+critiques  as references.
+Training  data synthesis  and model training.  Since human-annotated  
+datasets  cannot scale up, this study utilizes  the closed-source  GPT-
+4o model to synthesize  critique  datasets  based on the Self-Instruct  
+method  (Liu et al., 2024 ). Speciﬁcally,  three few-shot  examples  are 
+placed in the prompt  to instruct  LLMs to synthesize  2000 training  data 
+examples  for each data distribution  type. Each training  example  includes  
+the query (𝑄), the generated  text (𝑅), evaluation  criteria  (cri.) and the 
+critique  ((𝑟, 𝑆) for single-wise  critique  and (𝑟, 𝐿) for pair-wise  critique).  
+The generated  critique  dataset  is used to train the InternLM2-7B-Chat  
+base model, with training  hyper-parameters  listed in Table 3. These 
+hyper-parameters  remain unchanged  across diﬀerent  experimental  se-
+tups. Speciﬁcally,  we choose LoRA (Hu et al., 2021 ) primarily  for its 
+parameter  eﬃciency.  It signiﬁcantly  reduces  the number  of trainable  
+parameters  and GPU memory  footprint  compared  to full ﬁne-tuning,  
+making  it well-suited  for optimizing  7B-8B scale LLMs given our limited  
+hardware/computational  setup (a server with 8 NVIDIA  3090 GPUs).
+3.3.  Analysis  on data type distribution
+The experimental  results are shown in Fig. 1(a) and (b), from which 
+we could summarize  following  conclusions.
+(1) Impact of data types on critique  ability. As for single-wise  critique  
+protocol,  text summarization,  NLP tasks, general  dialogue,  and creative  
+writing  dataset  signiﬁcantly  enhance  both objective  and subjective  eval-
+uation metrics  in CriticEval , outperforming  other types of data. In con-
+trast, for pair-wise  critique  protocol,  code generation,  NLP tasks, func-
+tional writing,  and reasoning  QA dataset  demonstrate  a more signiﬁcant  
+improvement  in the model’s  critique  ability. These results indicate  that 
+the requirements  for data types diﬀer between  single-wise  and pair-wise  
+critique,  highlighting  the importance  of dynamically  adjusting  data dis-
+tribution  during training.  Such adaptability  allows the model to focus 
+on learning  from the most informative  samples  for each critique  setting,  
+thereby  improving  both generalization  and task-speciﬁc  performance.  
+Based on these experimental  results,  the high-quality  heuristic  data dis-
+tribution  for single-wise  and pair-wise  critique  tasks are summarized  
+(see Table 4). This data distribution  is used to control  the sample prob-
+abilities  for diﬀerent  data types. Speciﬁcally,  data types that contribute  
+more signiﬁcantly  to model performance  are assigned  higher weights  
+during data sampling,  ensuring  their higher proportion  in the synthe-
+sized dataset.
+(2) Beneﬁts  of diverse data types. Based on the heuristic  data distribution  
+listed in Table 4, we construct  a mixed training  dataset  comprising  mul-
+tiple data types. The experimental  results (Fig. 1(a) and (b), mixed data) 
+demonstrate  that the mixed data signiﬁcantly  outperforms  that trained  
+on each single data type. This experimental  ﬁnding  suggests  that diverse  
+data distributions  can eﬀectively  enhance  the quality of critique  training  
+dataset.Table 4 
+Heuristic  data distribution  of data types.
+ Generation  Task  Single-wise  Pair-wise
+ Summarization  17.5 %  5 %
+ NLP Tasks  17.5 %  17.5 %
+ Dialogue  17.5 %  5 %
+ Creative  Writing  17.5 %  10 %
+ Code Generation  10 %  17.5 %
+ Reasoning  QA  10 %  17.5 %
+ Functional  Writing  5 %  17.5 %
+ Text Rewriting  5 %  10 %
+3.4.  Analysis  on the quality distribution  of generated  texts
+This section analyzes  the quality distribution  of generated  texts un-
+der single-wise  and pair-wise  critique  protocols.
+(1) Single-wise  critique  results. As shown in Fig. 2, compared  to low-
+quality and high-quality  generated  texts, medium-quality  generated  
+texts contributed  more signiﬁcantly  to improving  the model’s  critique  
+ability. For instance,  in terms of the quality of generated  critiques  (mid-
+dle panel of Fig. 2), models  trained  on medium-quality  generated  text 
+data achieved  signiﬁcantly  higher performance  on the dev and test sets 
+compared  to low-quality  and high-quality  text. This phenomenon  sug-
+gests that the medium-quality  generated  text exhibits  more diverse  er-
+ror types and patterns.  Therefore,  the critiques  for the medium-quality  
+samples  contain  more dense training  signals,  which is beneﬁcial  to the 
+model optimization.  Further  analysis  of the impact of the proportion  of 
+medium-quality  generated  text data on model performance  (Fig. 3(a)) 
+reveals that as the proportion  of medium-quality  generated  text in-
+creases,  the model’s  critique  ability gradually  improves,  reaching  its 
+peak when the proportion  is between  0.6 and 0.8. However,  when the 
+training  data consists  entirely  of medium-quality  generated  text, the 
+model’s  performance  drops signiﬁcantly.  This indicates  that the qual-
+ity distribution  of the generated  text to be evaluated  must remain di-
+verse. Moreover,  this study also examines  the impact of the proportion  
+of high-quality  data relative  to low-quality  data on model performance.  
+With the proportion  of medium-quality  data ﬁxed at 50 %, the ratio of 
+high-quality  to low-quality  generated  text is adjusted,  and the experi-
+mental results are shown in Fig. 3(b). As the proportion  of high-quality  
+generated  text data increases,  the model’s  critique  ability improves  pro-
+gressively,  peaking  when the proportion  reaches  0.8, and then slightly  
+declines.  This suggests  that a slightly  higher proportion  of high-quality  
+data compared  to low-quality  data contributes  to further enhancing  
+model performance.
+(2) Pair-wise  critique  results. As shown in Fig. 4, it can be found that dif-
+ﬁcult samples  lead to the most signiﬁcant  improvement  in the model’s  
+critique  abilities.  This suggests  that challenging  samples  are more eﬀec-
+tive in pushing  the model to reﬁne its critique  capabilities.  Speciﬁcally,  
+as shown in the middle panel of Fig. 4, the model trained  on diﬃcult  
+data samples  achieved  a subjective  evaluation  score of 5.98 on the Crit-
+icEval  dev set, signiﬁcantly  higher than the scores for medium-quality  
+and simple-quality  data (5.33 and 5.16, respectively).  This result indi-
+cates that the diﬃcult  training  samples  in pair-wise  critique  demands  
+more detailed  analysis,  providing  richer training  signals for optimiz-
+ing critique  models.  Further  analysis  of the impact of the proportion  
+of medium-quality  and simple-quality  samples  on model performance  
+(Fig. 4, right panel) reveals that, under the condition  of a ﬁxed 50 % 
+proportion  of diﬃcult  samples,  adjusting  the proportion  of medium-
+quality relative  to simple-quality  generated  texts in the training  data 
+lead to some ﬂuctuations  in model performance  but did not exhibit a 
+clear trend. This suggests  that, in pair-wise  critique  protocol,  the critique  
+ability is not signiﬁcantly  correlated  with the proportion  of medium-  and 
+simple-quality  generated  texts. Therefore,  the subsequent  experiments  
+ﬁxed the proportions  of these two types at 50 % each.Expert  Systems  With Applications  300 (2026)  129878  
+4 
+
+C. Xu et al.
+Fig. 1. Impact of the data types on model’s critique ability.
+Fig. 2. Impact of quality distribution  on model’s critique ability in single-wise  evaluation  protocol.
+Table 5 
+Heuristic  data distribution  for evaluated  text in single-wise  critique.
+ Data Distribution  Single-wise  Critique
+ Low-quality  Medium-quality  High-quality
+ Proportion  0.1  0.6  0.3
+Table 6 
+Heuristic  data distribution  for evaluated  text in pair-wise  critique.
+ Data Distribution  Pair-wise  Critique
+ Simple-quality  Medium-quality  Diﬃcult-quality
+ Proportion  0.1  0.6  0.3
+Based on the above experimental  conclusions,  this paper establishes  
+an initial heuristic  data distribution  (𝐷Heuristic ) for the quality of gener-ated texts (Tables 5 and 6). This data distribution  is used to sample the 
+quality types of training  dataset.  Speciﬁcally,  the proportion  of medium-
+quality and diﬃcult-quality  generated  texts for single-wise  critique  and 
+pair-wise  critique  are increased.
+4.  Dynamic  iterative  data distribution  optimization
+The data distribution  in most existing  critique  datasets  are static, 
+denoted  as (𝐷Heuristic ), which may lead to a mismatch  with the vulner-
+able data distribution  of the target optimization  model (𝐷𝑀𝑡), thereby  
+reducing  the eﬀectiveness  of training  data. Therefore,  we propose  the 
+DIDD (Dynamic  Iterative  Data Distribution  Optimization  Method)  to 
+address  this issue. Speciﬁcally,  DIDD introduces  a “Detection-then-
+Optimization”  mechanism,  jointly optimizing  the data distribution  and 
+the target critique  model. The overall workﬂow  is illustrated  in Fig. 5, 
+consisting  of four steps:Expert  Systems  With Applications  300 (2026)  129878  
+5 
+
+C. Xu et al.
+Fig. 3. Impact of the proportion  of quality distribution  on model’s critique ability (single-wise  critique protocol).
+Fig. 4. Impact of the quality distribution  of generated  texts on model performance  in pair-wise  critique protocol.
+(1)Test Data Generation  is detailed  in Section  4.1;
+(2)Vulnerable  Data Distribution  Detect is detailed  in Section  4.2);
+(3)Data Distribution  Mixture  is detailed  in Section  4.3);
+(4)Model Optimization  is detailed  in Section  4.4.
+The ﬁrst three steps are “Detection”,  and the last step pertains  to “Opti-
+mization”.
+4.1.  Test data generation
+During the 𝑡th iteration,  the Generator  LLM synthesize  the test 
+dataset  𝑡
+𝑡𝑒𝑠𝑡 using a advanced  LLM based on an initial heuristic  data 
+distribution  𝐷Heuristic1 The seed data points are sampled  based on the 
+𝐷Heuristic to control  the data distribution  of the test dataset  (Liu et al., 
+2024 ). In this work, the GPT-4o  model is employed  to synthesize  test 
+data for both single-wise  evaluation  and pair-wise  critique  tasks. For ex-
+ample, Fig. 6 presents  the prompt  template  for single-wise  critique  data 
+generation,  populated  with ﬁve key elements  prior to GPT-4o  inference:
+1In this paper, the heuristic  data distribution  constructed  in Section 3.2 is 
+used, though any predeﬁned  data distributions  can also be employed.(1)"domain"  (data type category),
+(2)"domaindef"  (formal  deﬁnition  of the data type),
+(3)"response_quality"  (predeﬁned  text quality tier),
+(4)"generation_num"  (sample  count),  and
+(5)"reference"  (providing  few-shot  examples  for LLM generation).
+Formally,  the test dataset  𝑡
+𝑡𝑒𝑠𝑡 is deﬁned  as follows:
+𝑡
+𝑡𝑒𝑠𝑡={
+{(𝑄𝑖, 𝑅𝑖, 𝐶𝑟𝑒𝑓
+𝑖)}ℕ𝑡𝑒𝑠𝑡
+𝑖=1, Single-wise
+{(𝑄𝑖,(𝑅1
+𝑖, 𝑅2
+𝑖), 𝐶𝑟𝑒𝑓
+𝑖)}ℕ𝑡𝑒𝑠𝑡
+𝑖=1,Pair-wise(1)
+where 𝑄𝑖 represents  the input data. In single-point  evaluation  tasks, 𝑅𝑖
+denotes  a generated  text to be evaluated,  and 𝐶𝑟𝑒𝑓
+𝑖 refers to the reference  
+critiques  for 𝑅𝑖. In pair-wise  critique  tasks, 𝑅1
+𝑖 and 𝑅2
+𝑖 represent  a pair of 
+generated  texts to be compared,  and 𝐶𝑟𝑒𝑓
+𝑖 analyzes  their performance,  
+generating  preference  labels to indicate  which one is better. ℕ𝑡𝑒𝑠𝑡 denotes  
+the size of the dataset.  On the test dataset  𝑡𝑒𝑠𝑡.
+After obtaining  𝑡
+𝑡𝑒𝑠𝑡, the target optimization  model 𝑀𝑡 at 𝑡th itera-
+tion is used to generate  critique  samples  𝐶𝑀
+𝑖:
+𝐶𝑀
+𝑖={
+𝑀𝑡(𝑄𝑖, 𝑅𝑖), Single-wise
+𝑀𝑡(𝑄𝑖,(𝑅1
+𝑖, 𝑅2
+𝑖)),Pair-wise(2)Expert  Systems  With Applications  300 (2026)  129878  
+6 
+
+C. Xu et al.
+Fig. 5. The overview  of our proposed  DIDD, consisting  of two parts: (1) Dynamic  data distribution  detection;  and (2) Model optimization.
+Fig. 6. Single-wise  critique data generation  prompt.Expert  Systems  With Applications  300 (2026)  129878  
+7 
+
+C. Xu et al.
+4.2.  Vulnerable  data distribution  detection
+Then, the Judge LLM conducts  the meta-evaluation  to measure  the 
+quality of 𝐶𝑀
+𝑖 generated  by the target optimization  model. The detailed  
+prompt  template  is shown in Fig. 7. Previous  works have proven that 
+the meta-evaluation  is reliable  when the reference  critiques  are pro-
+vided (Sun et al., 2024 ). Therefore,  in the DIDD method,  the Judge LLM 
+evaluates  the quality of 𝐶𝑀
+𝑖 based on the reference  critique  𝐶𝑟𝑒𝑓
+𝑖 in the 
+test dataset:
+Meta-E𝑖={
+Judger (𝑄𝑖, 𝑅𝑖, 𝐶𝑟𝑒𝑓
+𝑖, 𝐶𝑀
+𝑖), Single-wise
+Judger (𝑄𝑖,(𝑅1
+𝑖, 𝑅2
+𝑖), 𝐶𝑟𝑒𝑓
+𝑖, 𝐶𝑀
+𝑖),Pair-wise(3)
+where Judger is the GPT-4o,  since its meta-evaluation  capability  is 
+proven by previous  works (Lan et al., 2024b ; Sun et al., 2024 ). Meta-E𝑖
+represents  the meta-evaluation  information  of 𝐶𝑀
+𝑖, which includes  a de-
+tailed analysis  of quality and a quality label (0 or 1, indicating  incorrect  
+or correct,  respectively).  {Meta-E }ℕ
+𝑖 are used to count the error rates of 
+𝑀𝑡 under diﬀerent  data distribution  types, thereby  constructing  its vul-
+nerable  data distribution  𝐷𝑀𝑡. 𝐷𝑀𝑡 quantiﬁes  the sampling  probabilities  
+for data type and response  quality distributions  (deﬁned  in Section  3), 
+where higher error rates correspond  to higher sampling  frequencies,  en-
+abling us to speciﬁcally  improve  the model’s  performance  on these dis-
+tributions.
+4.3.  Data distribution  mixture
+Further,  the mixed data distribution  is obtained  to construct  a high-
+quality training  dataset  by combining  the strengths  of heuristic  data dis-
+tribution  and the model’s  vulnerable  data distribution.  Speciﬁcally,  the 
+mixed data distribution  𝐷mix is constructed  by a weighted  combination  
+of the heuristic  data distribution  𝐷Heuristic and the model’s  vulnerable  
+data distribution  𝐷𝑀𝑡:
+𝐷mix=𝛼×𝐷𝑀𝑡+ (1 − 𝛼) ×𝐷Heuristic (4)
+where 𝛼∈ [0,1] is a hyper-parameter  that controls  the weight of the 
+model’s  vulnerable  data distribution  𝐷𝑀𝑡. By adjusting  the value of 𝛼, 
+the contribution  of the two distributions  to the mixed data can be ﬂexi-
+bly balanced.
+Subsequentlly,  the high-quality  training  dataset  𝑡
+train can be con-
+structed  based on 𝐷mix, following  the data synthesis  steps described  in 
+Section  4.1.
+4.4.  Model optimization
+Finally,  the target optimization  model 𝑀𝑡 is optimized  by conducting  
+supervised  ﬁne-tuning  (Ouyang  et al., 2022a ). Speciﬁcally,  In the 𝑡th 
+iteration,  𝑡
+train is merged  with the data from the previous  𝑡-1 iterations  
+to form a ﬁnal training  dataset,  and the Maximum  Likelihood  Estimation  
+(MLE) is used to optimize  the model:
+𝐿MLE=⎧
+⎪
+⎪
+⎨
+⎪
+⎪⎩−1
+ℕtrainℕtrain∑
+𝑖=1log𝑝𝜃𝑡(𝐶𝑖|𝑄𝑖, 𝑅𝑖), Single-wise
+−1
+ℕtrainℕtrain∑
+𝑖=1log𝑝𝜃𝑡(𝐶𝑖|𝑄𝑖, 𝑅1
+𝑖, 𝑅2
+𝑖),Pair-wise(5)
+where 𝜃𝑡 represents  the parameters  of the target optimized  model 𝑀𝑡
+in the 𝑡th iteration,  ℕtrain denotes  the total number  of training  samples,  
+and 𝐶𝑖, 𝑄𝑖, and 𝑅∗
+𝑖 denote the reference  critique,  input data and target 
+response  for the 𝑖th sample,  respectively.  The optimized  model 𝑀𝑡+1 will 
+be used in the next iteration  to further improve  the critique  ability of 
+target optimization  model.
+5.  Experimental  results  and analysis
+This section provides  a comprehensive  evaluation  of the proposed  
+DIDD method  on single-wise  and pair-wise  evaluation  protocols.  We aim to assess not only the absolute  performance  improvements  brought  by 
+DIDD, but also its generalization  ability across diﬀerent  model architec-
+tures and benchmark  datasets.
+5.1.  Baselines  and experimental  setup
+5.1.1.  Comparison  models and datasets
+Single-wise  critique  evaluation.  To verify the eﬀectiveness  of the DIDD 
+method,  we compare  it with eight state-of-the-art  closed-source  and 
+open-source  models,  including  GPT-3.5-turbo,  GPT-4-turbo,  Qwen2-7B-
+Instruct  (Team , 2024 ), Themis-8B  (Hu et al., 2024 ), TIGERScore-7B,  
+TIGER Score-13B  (Jiang et al., 2024 ), UltraCM-13B  (Cui et al., 2023 ), 
+CritiqueLLM-6B  (Ke et al., 2024 ) and Auto-J-13B  (Li et al., 2024b ). 
+Additionally,  we also compare  the widely-used  UltraFeedback  critique  
+dataset  (Cui et al., 2023 ).
+Pair-wise  critique  evaluation.  Our proposed  DIDD is compared  with four 
+advanced  models,  including  GPT-3.5-turbo,  GPT-4-turbo,  Qwen2-7B-
+Instruct  (Team , 2024 ), and Auto-J-13B  (Li et al., 2024b ). Moreover,  we 
+also compare  the widely-used  Auto-J pair-wise  critique  dataset.
+Moreover,  the baseline  that trained  with our proposed  heuristic  data 
+distribution  𝐷Heuristic is also evaluated,  and the data scales of both meth-
+ods are kept the same to ensure fairness.
+5.1.2.  Experimental  setup
+All experiments  utilize GPT-4o  to synthesize  training  data, which are 
+used to train several base models:  InternLM2-7B-Chat  (Cai et al., 2024 ), 
+Llama-3-8B-Instruct  and Qwen2.5-0.5B/1.5B/3B/7B  models  (Team , 
+2024 ). The initial base model 𝑀0 for the ﬁrst iteration  is initialized  
+from InternLM2-7B-Chat  and Llama-3-8B-Instruct,  respectively.  The de-
+fault test data size of our proposed  DIDD method  is set as 400. More 
+details of model training  and hyperparameter  settings  can be found in 
+Section  3.2.2 .
+5.1.3.  Evaluation  benchmarks
+The evaluation  benchmarks  for the single-wise  critique  task is the 
+same as the setup described  in Section  3.2.2 . In the pair-wise  critique  
+tasks, in addition  to CriticEval  benchmark,  we also supplement  the 
+Auto-J (Li et al., 2024b ) and PreferenceBench  (Kim et al., 2024b ) bench-
+marks. Auto-J and PreferenceBench  use accuracy  (Acc.) as the objective  
+evaluation  metric to measure  the consistency  between  model judgments  
+and human-annotated  preference.  Since Auto-J,  PreferenceBench  and
+CriticBench  don’t include  the dev set, we only report the model’s  per-
+formance  on CriticEval  dev set. Besides,  this dev set is not used for 
+any training  procedure,  like early stopping.  Both dev and test sets were 
+used strictly for performance  evaluation.
+5.2.  Experimental  results
+Single-wise  critique.  Table 7 summarizes  the overall experimental  results 
+of all baseline  methods  and our proposed  DIDD method  under the single-
+wise evaluation  task, and we could summarize  followig  conclusions:
+(1)Signiﬁcant  Improvements:  The critiques  generated  by the DIDD 
+method  signiﬁcantly  improves  performance  of two base models.  For 
+instance,  the InternLM2-7B-Chat  and Llama-3-8B-Instruct  models  
+that ﬁne-tuned  with DIDD data achieved  subjective  evaluation  im-
+provements  of 21.01 %  and 19.92 %  over their base models  on the
+CriticEval  benchmark’s  dev and test sets;
+(2)Superiority  over Baseline  Dataset:  When evaluated  on Crit-
+icBench  and CriticEval , models  trained  on synthetic  data gener-
+ated by DIDD signiﬁcantly  outperforms  that trained  on UltraFeed-
+back;
+(3)Superiority  over 𝐷Heuristic : The DIDD method  signiﬁcantly  outper-
+forms the heuristic  data distributions,  indicating  that mitigating  the 
+mismatch  between  training  data distribution  and the target optimiza-
+tion model is beneﬁcial  for enhancing  the model’s  critique  ability;Expert  Systems  With Applications  300 (2026)  129878  
+8 
+
+C. Xu et al.
+Fig. 7. Meta-critique  prompt template.
+(4)Superiority  over baselines:  The ﬁne-tuned  InternLM2-7B-Chat  and 
+Llama3-8B-Instruct  base models  signiﬁcantly  outperforms  existing  
+7B-13B  critique  models,  and they even outperforms  the closed-
+source GPT-3.5-turbo  model. Although  the DIDD method  slightly  un-
+derperforms  the GPT-3.5-turbo  model in the objective  evaluation  of 
+CriticEval,  it achieves  superior  performance  in CriticEval  subjec-
+tive evaluation  and CriticBench .
+Pair-wise  critique.  Table 8 presents  the pair-wise  critique  evaluation  re-
+sults. It can be found that the DIDD method  demonstrates  remarkable  
+performance  in enhancing  the critique  ability of two base models.  For in-
+stance, on the test set of CriticEval , the subjective  critique  score of In-
+ternLM2-7B-Chat  improves  from 4.62 to 6.07 (on a scale of 1–10), repre-
+senting  an increase  of 31.39 %  and surpassing  advanced  models  such as 
+GPT-3.5-turbo,  Qwen2-7B-Instruct  and Auto-J-13B  baselines;  Moreover,  
+on the CriticEval , Auto-J and PreferenceBench  benchmarks,  the data 
+generated  by the DIDD method  signiﬁcantly  outperforms  both training  
+data generated  based on heuristic  data distributions  and the high-quality  critique  dataset  Auto-J.  These results indicate  that the DIDD method  ex-
+cels not only in single-wise  critique  task but also demonstrates  signiﬁ-
+cant advantages  in pair-wise  critique  task, further validating  the gener-
+ality and eﬀectiveness  of our proposed  DIDD method.
+5.3.  Inﬂuence  of using other Model’s  𝐷𝑀
+To further validate  the eﬀectiveness  of our proposed  DIDD method,  
+we designs  two new variants:
+(1)Replacing  the vulnerable  data distribution  𝐷𝑀 of the InternLM2-7B-
+Chat base model with the vulnerable  data distribution  of the Llama-
+3-8B-Instruct  base model;
+(2)Replacing  the vulnerable  data distribution  𝐷𝑀 of the Llama-3-8B-
+Instruct  base model with the vulnerable  data distribution  of the In-
+ternLM2-7B-Chat  base model.
+By comparing  the experimental  results of the DIDD method  and these 
+variants,  we can verify the critical role of leveraging  the vulnerable  data 
+distribution  of the base model itself.Expert  Systems  With Applications  300 (2026)  129878  
+9 
+
+C. Xu et al.
+Table 7 
+The overall experimental  results on single-wise  critique benchmarks:  CriticEval  single-wise  evaluation  part and
+CriticBench .
+ Model  CriticEval  Single-wise  CriticBench
+ Dev  Test  Math.  Comm.  Sym.  Algo.  Code.  Overall
+ Obj.  Sub.  Obj.  Sub.
+ Closed-source  Models
+ GPT-3.5-Turbo  61.47  5.06  51.44  5.21  62.01  50.22  64.49  46.15  73.13  51.44
+ GPT-4-Turbo  76.09  7.84  63.54  7.84  92.55  71.56  90.75  63.51  91.36  78.75
+ 7B-13B Open-source  Models
+ Qwen2-7B- Instruct  50.49  5.47  19.32  4.15  52.25  26.20  29.55  9.35  70.23  45.66
+ Themis-8B  38.07  4.07  38.11  4.32  53.34  27.35  33.16  35.64  44.33  42.57
+ TIGERScore-7B  0.64  3.24  17.05  3.11  66.62  38.21  44.52  27.34  52.49  52.83
+ TIGERScore-13B −2.31 3.39  17.87  3.31  68.91  45.47  53.04  42.86  44.13  56.28
+ UltraCM-13B  21.51  4.12  21.51  4.12  76.54  35.59  50.51  25.17  54.73  59.39
+ Auto-J-13B  36.05  4.21  36.05  4.21  80.02  50.64  53.06  52.06  75.61  67.41
+ CritiqueLLM-6B  35.52  3.88  31.34  3.71  66.37  62.53  63.00  62.83  65.12  67.73
+ InternLM2-7B-Chat  38.78  3.73  44.39  3.77  27.08  17.48  18.82  14.29  36.13  24.71
+ + 𝑫Heuristic  56.63  4.12  45.75  4.17  71.28  52.96  67.69  56.84  34.34  63.67
+ + UltraFeedback  57.06  3.71  56.78  3.76  64.10  39.23  45.22  17.07  65.03  54.83
+ + DIDD  57.80  5.12  51.84  5.14  74.57  62.56  63.61  36.14  44.64  70.00
+ Llama3-8B- Instruct  37.20  5.04  31.84  3.67  78.33  62.64  62.05  62.19  76.41  70.71
+ + 𝑫Heuristic  51.06  5.19  48.76  5.17  76.74  65.24  57.52  38.06  49.32  72.36
+ + DIDD  51.12  5.28  50.67  5.26  76.42  66.42  55.88  42.44  61.16  73.30
+ Qwen2.5-0.5B-Instruct  2.06  3.80 -3.92  3.83  36.14  54.06  10.14  47.30  35.50  48.10
+ + 𝑫Heuristic  25.39  4.23  20.97  4.33  63.11  50.67  36.90  32.50  19.79  53.19
+ + DIDD  27.68  4.55  25.27  4.34  64.50  51.51  38.80  24.08  5.65  60.55
+ Qwen2.5-1.5B-Instruct  31.14  4.53  14.01  4.6  44.06  27.14  47.83  26.88  50.59  41.12
+ + 𝑫Heuristic  35.72  5.15  36.38  5.15  56.84  53.79  58.33  30.89  32.42  62.01
+ + DIDD  38.75  5.29  36.65  5.28  66.74  50.47  46.81  27.69  54.89  62.10
+ Qwen2.5-3B-Instruct  39.48  5.14  35.96  5.09  65.58  53.18  65.37  53.90  39.64  59.86
+ + 𝑫Heuristic  45.22  5.27  40.32  5.14  54.32  47.93  58.40  32.67  30.41  58.40
+ + DIDD  47.07  5.70  41.93  5.62  66.74  62.46  41.54  29.67  61.07  66.95
+ Qwen2.5-7B-Instruct  46.54  5.65  47.82  5.21  76.72  57.71  68.55  57.54  70.00  70.57
+ + 𝑫Heuristic  55.35  5.77  52.37  5.23  75.31  64.41  65.22  41.61  64.99  70.68
+ + DIDD  59.14  5.85  56.76  5.39  81.32  65.04  66.35  59.51  66.93  71.42
+The experimental  results are shown in Table 9. It can be observed  
+that, compared  to our proposed  DIDD method,  both two new vari-
+ants perform  signiﬁcantly  worse on most metrics  under single-wise  
+and pair-wise  critique  tasks. For example,  the model trained  with 
+the DIDD method  achieved  an average  improvement  of 8.19 % over 
+the variant  models  in the subjective  evaluation  CriticEval , and the 
+average  improvement  is 3.05 % in the objective  evaluation  CriticE-
+val. Moreover,  these two variants  do not show a signiﬁcant  advan-
+tage compared  to the model that trained  on heuristic  data distri-
+butions.  For instance,  the model trained  using the vulnerable  data 
+distribution  of Llama-3-8B-Instruct  on the InternLM2-7B-Chat  base-
+line model even perform  worse in the CriticEval  pair-wise  eval-
+uation (objective  evaluation:  43.78 < 47.78, subjective  evaluation:
+5.07 < 5.98).
+To more directly  verify the eﬀectiveness  of the DIDD data distribu-
+tion, this section further designs  a variant  method:  DIDD-Reverse.  This 
+method  performs  a reversal  operation  on the target optimized  model’s  
+weak data distribution  𝐷𝑀 detected  by DIDD, reducing  the sampling  
+probability  of data types where the model performs  poorly,  while in-
+creasing  the sampling  probability  of data types where the model per-
+forms well. Speciﬁcally,  the calculation  formula  for the DIDD mixed 
+data distribution  (4) is modiﬁed  as: 
+𝐷mix=𝛼×Reverse (𝐷𝑀𝑡) + (1 − 𝛼) ×𝐷Heuristic (6)
+where Reverse (𝐷𝑀𝑡) =Norm (1
+𝐷𝑀𝑡) represents  the reversed  data distri-
+bution,  and Norm denotes  the normalization  operation.  By comparing  DIDD-Reverse  and DIDD, the eﬀectiveness  of targeted  optimization  on 
+the model’s  weak data distribution  can be demonstrated.
+To evaluate  the performance  of DIDD-Reverse,  this section compares  
+the experimental  results of DIDD and its variant.  The experiments  are 
+based on the InternLM2-7B-Chat  and Llama-3-8B-Instruct  base mod-
+els, and the results are shown in Table 10. It can be observed  that 
+DIDD signiﬁcantly  outperforms  DIDD-Reverse  in most metrics,  partic-
+ularly in the subjective  evaluation  of CriticEval,  where the performance  
+of DIDD-Reverse  lags far behind DIDD. This indicates  that the DIDD 
+method  can eﬀectively  enhance  the model’s  interpretable  evaluation  
+performance  by optimizing  the weak data distribution.  Furthermore,  
+since the meta-evaluation  in the DIDD method  mainly focuses  on the 
+interpretability  and accuracy  of the generated  text, the model trained  
+by the DIDD-Reverse  method  shows noticeable  degradation  in these as-
+pects. Particularly  in the single-point  subjective  evaluation  of the Llama-
+3-8B-Instruct  model, the DIDD-Reverse  method  performs  even worse 
+than the untuned  base model. This further veriﬁes  the critical role 
+of the weak data distribution  detected  by DIDD in optimizing  model
+performance.
+5.4.  Iteration  analysis  in DIDD
+Fig. 8 illustrates  the trend of single-wise  critique  ability of the 
+ﬁne-tuned  InternLM2-7B-Chat  baseline  model under diﬀerent  itera-
+tion counts in the DIDD method.  It can be observed  that the critique
+ability of the model improves  signiﬁcantly  with an increasing  number  
+of iterations  and tends to stabilize  after 2–3 iterations.Expert  Systems  With Applications  300 (2026)  129878  
+10 
+
+C. Xu et al.
+Table 8 
+The overall experimental  results on pair-wise  critique benchmarks:  CriticEval  pair-wise  
+evaluation  part, Auto-J and PreferenceBench.
+ Model  CriticEval  Pair-wise  Auto-J  Preference  Bench
+ Dev  Test  Acc.  Acc.
+ Obj.  Sub.  Obj.  Sub.
+ Closed-source  Models
+ GPT-3.5-Turbo  40.67  5.08  40.67  4.92  72.62  83.38
+ GPT-4-Turbo  59.82  8.02  57.33  7.89  81.84  89.64
+ 7B-13B Open-source  Models
+ Qwen2-7B- Instruct  40.44  4.79  39.11  4.74  71.44  83.78
+ Auto-J-13B  46.22  4.69  49.33  4.63  59.36  74.02
+ InternLM2-7B-Chat  23.78  4.62  23.78  4.62  67.81  84.43
+ + Auto-J Data  46.22  5.09  45.56  5.22  75.56  84.43
+ + 𝐷Heuristic  47.78  5.98  44.67  5.59  73.70  86.59
+ + DIDD  48.22  6.16  45.56  6.07  76.35  86.99
+ Llama-3-8B-Instruct  39.56  4.45  40.22  4.36  70.26  85.74
+ + 𝐷Heuristic  42.89  5.55  43.11  5.45  72.13  86.43
+ + DIDD  44.00  5.93  44.44  5.76  76.25  86.94
+ Qwen2.5-0.5B-Instruct  5.56  3.45  4.44  3.55  42.69  52.65
+ + 𝑫Heuristic  15.33  4.41  17.33  4.23  55.94  59.86
+ + DIDD  23.56  4.51  23.78  4.55  62.61  69.92
+ Qwen2.5-1.5B-Instruct  20.22  4.24  24.89  4.29  56.33  66.27
+ + 𝑫Heuristic  33.78  4.83  33.33  4.76  70.36  74.52
+ + DIDD  32.67  4.94  29.78  4.84  68.89  83.73
+ Qwen2.5-3B-Instruct  40.89  4.68  42.67  4.98  69.19  84.18
+ + 𝑫Heuristic  40.44  5.21  38.89  4.93  73.50  85.48
+ + DIDD  44.00  5.41  54.00  5.30  75.47  85.69
+ Qwen2.5-7B-Instruct  46.44  5.65  45.78  5.37  74.48  86.74
+ + 𝑫Heuristic  46.00  5.93  48.00  6.18  77.53  87.18
+ + DIDD  46.89  6.03  48.00  6.23  78.51  89.48
+Table 9 
+The comparison  between  DIDD and two variants  that utilize other model’s vulnerable  data distribution  in 
+DIDD method.
+ Model  Single-wise  Pair-wise
+ CriticEval  Critic Bench  CriticEval  Auto-P  Preference  Bench
+ Obj.  Sub.  Overall  Obj.  Sub.  Acc.  Acc.
+ InternLM2-7B-Chat  with Llama-3-8B-Instruct  𝐷𝑀
+ InternLM2-7B-Chat  38.78  3.73  24.71  23.78  4.62  67.81  84.43
+ + 𝐷Heuristic  56.63  4.12  63.67  47.78  5.98  73.70  85.74
+ + Llama-3-8B-Instruct  𝐷𝑀 54.93  5.02  68.74  43.78  5.07  76.15  86.54
+ + DIDD  57.80  5.12  70.00  48.22  6.16  76.35  86.94
+ Llama-3-8B-Instruct  with InternLM2-7B-Chat  𝐷𝑀
+ Llama-3-8B-Instruct  37.20  5.04  70.71  39.56  4.45  70.26  85.74
+ + 𝐷Heuristic  51.06  5.19  72.36  42.89  5.55  72.13  86.43
+ + InternLM2-7B-Chat  𝐷𝑀 51.00  5.20  70.24  45.56  5.63  69.78  88.19
+ + DIDD  51.12  5.28  73.30  44.00  5.93  76.25  86.94
+Table 10 
+The impact of reversing  the model’s weak distribution  on modelperformance.
+ Model  Single-wise  Pair-wise
+ CriticEval  Critic Bench  CriticEval  Auto-P  Preference  Bench
+ Obj.  Sub.  Overall  Obj.  Sub.  Acc.  Acc.
+ InternLM2-7B-Chat
+ InternLM2-7B-Chat  38.78  3.73  24.71  23.78  4.62  67.81  84.43
+ + DIDD-Reverse  51.28  4.14  64.97  44.00  4.54  75.47  86.74
+ + DIDD  57.80  5.12  70.00  48.22  6.16  76.35  86.94
+ Llama-3-8B-Instruct
+ Llama-3-8B-Instruct  37.20  5.04  70.71  39.56  4.45  70.26  85.74
+ + DIDD-Reverse  50.00  4.14  69.27  45.78  4.54  75.47  88.84
+ + DIDD  51.12  5.28  73.30  45.11  5.93  76.25  86.94Expert  Systems  With Applications  300 (2026)  129878  
+11 
+
+C. Xu et al.
+Fig. 8. The critique performance  changes  with iteration  counts in DIDD.
+Fig. 9. Hyper-parameter  analysis  of data distribution  mixture weight 𝛼.
+5.5.  Distribution  mixture  hyper-parameter  analysis
+DIDD generates  a mixed data distribution  𝐷mix by combining  the 
+model’s  vulnerable  data distribution  𝐷𝑀𝑡 with the heuristic  data dis-
+tribution  𝐷Heuristic using a hyper-parameter  𝛼. The mixing ratio 𝛼 is a 
+critical hyperparameter  aﬀecting  model performance.  This section in-
+vestigates  the impact of 𝐷𝑀𝑡 on model performance  by adjusting  𝛼 to 
+control  the proportion  of 𝐷𝑀𝑡 in 𝐷mix.
+As shown in Fig. 9(a) and (b), increasing  the proportion  of 𝐷𝑀𝑡 leads 
+to a signiﬁcant  trend where model performance  ﬁrst improves  and then 
+declines  in both single-wise  and pair-wise  critique  tasks. For single-wise  
+critique  tasks, the model achieves  optimal  performance  when 𝐷𝑀𝑡=
+0.5or0.6, while for pair-wise  critique  tasks, the optimal  performance  is 
+observed  at 𝐷𝑀𝑡= 0.4. Moreover,  the experimental  results indicate  that 
+the performance  of the mixed data distribution  𝐷mix consistently  sur-
+passes that of both the pure heuristic  data distribution  (𝐷𝑀𝑡= 0) and 
+the pure model vulnerable  data distribution  (𝐷𝑀𝑡= 1.0). This demon-
+strates that both the heuristic  data distribution  and the model’s  vul-
+nerable  data distribution  play crucial roles in optimizing  model perfor-
+mance.  By combining  the two distributions,  the quality of the data can 
+be further improved.5.6.  Test data scaling analysis
+This section aims to analyze  the impact of test data scale on the 
+performance  of the DIDD method  in detecting  the vulnerable  data dis-
+tribution  of target optimization  models.  Speciﬁcally,  we evaluate  the 
+vulnerable  data distribution  using diﬀerent  test data scales (100, 200, 
+400, 500, 800, 1000) in both single-wise  evaluation  and pair-wise  eval-
+uation tasks.
+The experimental  results (Fig. 10(a) and (b)) reveal a trend of ini-
+tial performance  improvement  followed  by decline  as scale increases.  
+This pattern  suggests  sensitivity  within the DIDD framework’s  meta-
+critique  process  (Judger  assessing  𝑀𝑡 outputs  𝐶𝑀
+𝑖 against  𝐶ref
+𝑖). Initial 
+gains likely reﬂect broader  distribution  coverage.  However,  the subse-
+quent decline  indicates  that the intrinsic  complexity  and error-proneness  
+of large-scale  meta-critique  operations  (e.g., nuanced  comparison,  er-
+ror detection  in rationales/scores,  consistency  assessment)  become  am-
+pliﬁed with more test data. Despite  our eﬀorts to mitigate  noise via 
+𝐶ref
+𝑖, cumulative  inaccuracies  in meta-evaluations  (Meta-E𝑖) negatively  
+impact the ﬁdelity  of derived  vulnerable  distributions  (𝐷𝑀𝑡) at larger
+scales.Expert  Systems  With Applications  300 (2026)  129878  
+12 
+
+C. Xu et al.
+Fig. 10. The analysis  about how test data scale aﬀects the model’s critique ability.
+Fig. 11. The analysis  about how training  data scale aﬀects the model’s critique ability.
+These ﬁndings  emphasize  the need to carefully  select test data scale 
+in DIDD applications,  balancing  the beneﬁt of data coverage  against  the 
+current  practical  limitations  of scaling the meta-critique  process,  which 
+underpins  the iterative  optimization  loop. Optimizing  meta-critique  ro-
+bustness  and scalability  remains  a key area for future work.
+5.7.  Training  data scale analysis
+This experiment  aims to analyze  how the scale of the constructed  
+training  dataset  aﬀects the model’s  critique  ability. As shown in 
+Fig. 11(a), in the single-wise  critique  task, the performance  curve of the 
+data generated  by the DIDD method  consistently  surpasses  that of the 
+baseline  method  as the scale of training  synthetic  data increases.  This 
+demonstrates  the signiﬁcant  advantage  of the DIDD method  in terms of 
+data quality.  In the pair-wise  critique  task, the performance  advantage  
+of the DIDD method  is similarly  evident.  Speciﬁcally,  as illustrated  in 
+Fig. 11(b), the critique  ability of model trained  by DIDD method  is much 
+better than baseline  (heuristic  data distribution)  that trained  with much 
+more data samples.  This suggests  that the DIDD method  not only outper-forms the baseline  method  in terms of data distribution  quality but also 
+demonstrates  a signiﬁcant  improvement  in data utilization  eﬃciency.  
+It highlights  that simply increasing  data quantity  is not suﬃcient–high-
+quality,  well-structured  data plays a crucial role in eﬀectively  enhancing  
+critique  performance.
+5.8.  Distribution  shift analysis
+In this section,  we present  a comparative  analysis  of the data distri-
+bution diﬀerences  constructed  by the DIDD method  for two base models.  
+First of all, the results demonstrate  signiﬁcant  discrepancies  between  the 
+initial heuristic  data distribution  and DIDD’s data distribution.  For in-
+stance, experimental  data in Table 11 reveal that under the single-wise  
+evaluation  task, the DIDD method  leads to a notable  increase  in the 
+proportion  of code generation  and functional  writing  in the data type 
+distribution  constructed  for the InternLM2-7B-Chat  model. Conversely,  
+the proportions  of text summarization  and general  dialogue  data show 
+a signiﬁcant  decrease.Expert  Systems  With Applications  300 (2026)  129878  
+13 
+
+C. Xu et al.
+Table 11 
+Distribution  shift analysis  on response  quality.
+ Text Summarization  NLP Tasks  General Dialogue  Creative Writing  Code Generation  Reasoning  Q&A  Functional  Writing  Text Rewriting
+ InternLM2-7B-Chat  Single-wise
+𝑫Heuristic  0.175  0.175  0.175  0.175  0.10  0.10  0.05  0.05
+𝑫mix  0.112  0.136  0.106  0.146  0.139  0.114  0.138  0.108
+ InternLM2-7B-Chat  Pair-wise
+𝑫Heuristic  0.175  0.175  0.175  0.175  0.10  0.10  0.05  0.05
+𝑫mix  0.141  0.160  0.240  0.187  0.086  0.073  0.025  0.087
+ Llama-3-8B-Instruct  Single-wise
+𝑫Heuristic  0.175  0.175  0.175  0.175  0.10  0.10  0.05  0.05
+𝑫mix  0.166  0.177  0.138  0.148  0.139  0.108  0.020  0.105
+ Llama-3-8B-Instruct  Pair-wise
+𝑫Heuristic  0.175  0.175  0.175  0.175  0.10  0.10  0.05  0.05
+𝑫mix  0.345  0.139  0.144  0.121  0.064  0.065  0.076  0.046
+Table 12 
+Distribution  shift analysis  on generation  tasks.
+ Single-wise  Pair-wise
+ Low Medium  High  Simple  Medium  Diﬃcult
+ InternLM2-7B-Chat
+𝑫Heuristic  0.10 0.60  0.30  0.20  0.20  0.60
+𝑫mix  0.25 0.35  0.40  0.32  0.20  0.48
+ Llama-3-8B-Instruct
+𝑫Heuristic  0.10 0.60  0.30  0.20  0.20  0.60
+𝑫mix  0.36 0.48  0.16  0.31  0.23  0.46
+Furthermore,  the experimental  results in Table 12 demonstrate  that 
+in the response  quality distribution  constructed  by DIDD for the In-
+ternLM2-7B-Chat  base model, the proportion  of medium-quality  gen-
+erated texts signiﬁcantly  decreased  (from 0.60 to 0.35), while the pro-
+portion  of high-quality  generated  texts notably  increased  (from 0.30 to 
+0.40). This indicates  a clear discrepancy  between  the vulnerable  data 
+distribution  of the base model and the heuristic  data distribution,  high-
+lighting  the necessity  for targeted  optimization  of the model’s  vulnerable  
+data distribution.  Additionally,  signiﬁcant  diﬀerences  exist between  the 
+vulnerable  data distributions  of the InternLM2-7B-Chat  and Llama3-8B-
+Instruct  base models.
+6.  Conclusions  and future works
+In this paper, we propose  a novel Dynamic  Iterative  Data Distribu-
+tion Optimization  method  (DIDD)  tailored  to target optimization  mod-
+els, addressing  the mismatch  between  the training  dataset  distribution  
+and target optimization  model. The DIDD method  employs  a “Detection-
+then-Optimization”  mechanism  for joint data distribution  and model op-
+timization.  Extensive  experimental  results on four benchmarks  demon-
+strate that, DIDD eﬀectively  mitigates  the mismatch  between  training  
+data distributions  and target optimization  models,  signiﬁcantly  enhanc-
+ing the model’s  critique  ability compared  to existing  strong baselines.  In 
+the future, we will explore  how to extend DIDD to more complex  gen-
+eration  tasks, such as multimodal  critiques,  code generation  critiques.
+7.  Limitations
+In this section,  we discuss two limitations  of our proposed  DIDD 
+method:  (1) Eﬀectiveness  of DIDD depends  on meta-critique  reli-
+ability:  Although  we enhanced  meta-critique  by synthesizing  reference  
+critiques  (Section  4.2) (Lan et al., 2024a ,b; Sun et al., 2024 ), our experi-
+ments show that meta-critique  remains  a bottleneck,  particularly  due to 
+noise introduced  by test data scaling.  For example,  increasing  test data scale initially  improves  performance  but eventually  degrades  it due to 
+ampliﬁed  noise, as shown in Fig. 10(a) and (b). This highlights  the need 
+for more robust meta-critique  methods  in future work; (2) Heuristic  
+data distribution  is limited:  DIDD focuses  on data type and quality 
+distributions  (Section  3.2), but real-world  scenarios  involve  more di-
+verse and dynamic  distributions.  In this paper, we observe  that assign-
+ing higher sample rate for high-contribution  data type (like medium-
+quality generated  text, Fig. 3) leads to better performance.  However,  it is 
+challenging  to analyze  the complex  data distribution.  We acknowledge  
+that manually  deﬁning  these heuristic  data distributions  is a preliminary  
+step, which may limit DIDD’s ﬂexibility.  Future work will explore  auto-
+mated methods  to identify  complex  distributions  of downstream  tasks, 
+broadening  DIDD’s applicability.
+CRediT  authorship  contribution  statement
+Chen Xu: Conceptualization,  Methodology,  Software,  Validation,  
+Writing–Original  Draft; Tian Lan: Conceptualization,  Methodology,  
+Software,  Validation,  Writing–Original  Draft; Zhenyu  Lv: Conceptu-
+alization,  Methodology,  Software,  Validation,  Writing–Original  Draft;
+Qunxi Dong: Writing–Review  & Editing;  Jieshuo  Zhang:  Writing–
+Review;  Heyan Huang:  Writing–Review;  Minqiang  Yang: Writing–
+Review;  Bin Hu: Supervision,  Resources.
+Data availability
+Data will be made available  on request.
+Declaration  of competing  interest
+The authors  declare  that they have no known competing  ﬁnancial  
+interests  or personal  relationships  that could have appeared  to inﬂuence  
+the work reported  in this paper. 
+Acknowledgments
+The authors  would like to express  their sincere gratitude  to all the 
+anonymous  reviewers  and meta-reviewers  for their insightful  comments  
+and constructive  feedback.
+This research  was ﬁnancially  supported  by multiple  funding  sources:  
+the National  Natural  Science  Foundation  of China (Nos. 62450100 , 
+62373057 , 62472203 , 92570114 , 62227807 ), the Postdoctoral  Fellow-
+ship Program  of CPSF (No. GZC20233403),  the China Postdoctoral  Sci-
+ence Foundation  (Nos. 2024M764142 , 2021M700423 , 2024T171131 ), 
+and the Fundamental  Research  Funds for the Central  Universities  (No. 
+2025CX11024 ).Expert  Systems  With Applications  300 (2026)  129878  
+14 
+
+C. Xu et al.
+References
+Banerjee,  S., & Lavie, A. (2005). Meteor: An automatic  metric for mt evaluation  with 
+improved  correlation  with human judgments.  In Ieevaluation@acl .
+Cai, Z., Cao, M., Chen, H., Chen, K. et al. (2024). InternLM2  technical  report. https://
+arxiv.org/abs/2403.17297 .
+Cui, G., Yuan, L., Ding, N., Yao, G., Zhu, W., Ni, Y., Xie, G., Liu, Z., & Sun, M. (2023). 
+Ultrafeedback:  Boosting language  models with high-quality  feedback.  https://arxiv.
+org/abs/2310.01377 .
+ElSayary,  A. (2024). Integrating  generative  AI in active learning environments:  Enhancing  
+metacognition  and technological  skills. In Proceedings  of the 15th international  multi-
+conference  on complexity,  informatics  and cybernetics:  IMCIC 2024 . International  Institute 
+of Informatics  and Cybernetics.  https://doi.org/10.54808/imcic2024.01.135
+Fu, J., Ng, S.-K., Jiang, Z., & Liu, P. (2023). Gptscore:  Evaluate as you desire. https://
+arxiv.org/abs/2302.04166v1 .
+Hellwig, N. C., Fehle, J., & Wolﬀ, C. (2025). Exploring  large language  models for the 
+generation  of synthetic  training samples for aspect-based  sentiment  analysis in low 
+resource settings. Expert Systems with Applications , 261, 125514. https://doi.org/10.
+1016/j.eswa.2024.125514
+Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu,  Z., Li, Y., Wang, S., Wang, L., & Chen, W. 
+(2021). LoRA: Low-rank  adaptation  of large language  models. https://arxiv.org/abs/
+2106.09685 .
+Hu, X., Lin, L., Gao, M., Yin, X., & Wan, X. (2024). Themis: Towards ﬂexible and inter-
+pretable NLG evaluation.  arXiv:2406.18365
+Huang, L., Ye, Z., Qin, J., Lin, L., & Liang, X. (2020). Grade: Automatic  graph-enhanced  
+coherence  metric for evaluating  open-domain  dialogue systems. https://arxiv.org/abs/
+2010.03994 .
+Jiang, D., Li, Y., Zhang, G., Huang, W., Lin, B. Y., & Chen, W. (2024). Tigerscore:  Towards 
+building explainable  metric for all text generation  tasks. https://arxiv.org/abs/2310.
+00752 .
+Kaplan, J., McCandlish,  S., Henighan,  T., Brown, T. B., Chess, B., Child, R., Gray, S., 
+Radford, A., Wu, J., & Amodei, D. (2020). Scaling laws for neural language  models. 
+https://arxiv.org/abs/2001.08361 .
+Ke, P., Wen, B., Feng, Z., Liu, X., Lei, X., Cheng, J., Wang, S., Zeng, A., Dong, Y., 
+Wang, H., Tang, J., & Huang, M. (2024). CritiqueLLM:  Towards an informative  cri-
+tique generation  model for evaluation  of large language  model generation.  https:
+//arxiv.org/abs/2311.18702 .
+Kim, S., Shin, J., Cho, Y., Jang, J., Longpre, S., Lee, H., Yun, S., Shin, S., Kim, S., Thorne, 
+J., & Seo, M. (2024a). Prometheus:  Inducing ﬁne-grained  evaluation  capability  in lan-
+guage models. https://arxiv.org/abs/2310.08491 .
+Kim, S., Suk, J., Longpre, S., Lin, B. Y., Shin, J., Welleck, S., Neubig, G., Lee, M., Lee, 
+K., & Seo, M. (2024b). Prometheus  2: An open source language  model specialized  in 
+evaluating  other language  models. arXiv:2405.01535
+Lan, T., Mao, X.-L., Wei, W., Gao, X., & Huang, H. (2020). Pone: A novel automatic  eval-
+uation metric for open-domain  generative  dialogue systems. ACM Transactions  on In-
+formation  Systems , 39(1). https://doi.org/10.1145/3423168
+Lan, T., Zhang, W., Lyu, C., Li, S., Xu, C., Huang, H., Lin, D., Mao, X.-L., & Chen, K. (2024a). 
+Training language  models to critique with multi-agent  feedback.  https://arxiv.org/
+abs/2410.15287 .
+Lan, T., Zhang, W., Xu, C., Huang, H., Lin, D., Chen, K., & Mao, X.-l. (2024b). Criticbench:  
+Evaluating  large language  models as critic. https://arxiv.org/abs/2402.13764 .
+Li, D., Wang, Z., Chen, Y., Jiang, R., Ding, W., & Okumura,  M. (2024a). A survey on 
+deep active learning:  Recent advances  and new frontiers.  https://arxiv.org/abs/2405.
+00334 .
+Li, J., Sun, S., Yuan, W., Fan, R.-Z., zhao, h., & Liu, P. (2024b). Generative  judge for 
+evaluating  alignment.  In The twelfth international  conference  on learning representations . 
+https://openreview.net/forum?id=gtkFw6sZGS .
+Li, J., Zhou, F., Sun, S., Zhang, Y., Zhao, H., & Liu, P. (2024c). Dissecting  human and 
+LLM preferences.  In L.-W. Ku, A. Martins, & V. Srikumar  (Eds.), Proceedings  of the 62nd 
+annual meeting of the association  for computational  linguistics  (volume 1: Long papers)
+(pp. 1790–1811).  Bangkok,  Thailand:  Association  for Computational  Linguistics.  https:
+//doi.org/10.18653/v1/2024.acl-long.99
+Lin, C.-Y. (2004). Rouge: A package for automatic  evaluation  of summaries.  In Acl 2004 .
+Lin, Z., Gou, Z., Liang, T., Luo, R., Liu, H., & Yang, Y. (2024a). Criticbench:  Benchmarking  
+LLMs for critique-correct  reasoning.  https://arxiv.org/abs/2402.14809 .
+Lin, Z., Gou, Z., Liang, T., Luo, R., Liu, H., & Yang, Y. (2024b). Criticbench:  Benchmarking  
+LLMs for critique-correct  reasoning.
+Liu, W., Zeng, W., He, K., Jiang, Y., & He, J. (2024). What makes good data for alignment?  
+a comprehensive  study of automatic  data selection in instruction  tuning. In The twelfth 
+international  conference  on learning representations . https://openreview.net/forum?id=
+BTKAeLqLMw .
+Liu, Y., Iter, D., Xu, Y., Wang, S., Xu, R., & Zhu, C. (2023). G-eval: NLG evalua-
+tion using gpt-4 with better human alignment.  In H. Bouamor,  J. Pino, & K. Bali 
+(Eds.), Proceedings  of the 2023 conference  on empirical methods in natural language 
+processing  (pp. 2511–2522).  Singapore:  Association  for Computational  Linguistics.  
+https://aclanthology.org/2023.emnlp-main.153 . https://doi.org/10.18653/v1/2023.
+emnlp-main.153
+McAleese,  N., Pokorny,  R. M., Uribe, J. F. C., Nitishinskaya,  E., Trebacz, M., & Leike, J. 
+(2024). LLM critics help catch llm bugs. https://arxiv.org/abs/2407.00215 .
+Ouyang, L., Wu, J., Jiang, X., Almeida,  D., Wainwright,  C., Mishkin, P., Zhang, 
+C., Agarwal,  S., Slama, K., Ray, A., Schulman,  J., Hilton, J., Kelton, F., Miller, 
+L., Simens, M., Askell, A., Welinder,  P., Christiano,  P. F., Leike, J., & Lowe, 
+R. (2022a). Training language  models to follow instructions  with human feed-
+back. In S. Koyejo, S. Mohamed,  A. Agarwal,  D. Belgrave,  K. Cho, & A. Oh 
+(Eds.), Advances  in neural information  processing  systems (pp. 27730–27744).  CurranAssociates,  Inc. (vol. 35). https://proceedings.neurips.cc/paper_ﬁles/paper/2022/ﬁle/
+b1efde53be364a73914f58805a001731-Paper-Conference.pdf .
+Ouyang, L., Wu, J., Jiang, X., Almeida,  D., Wainwright,  C. L., Mishkin, P., Zhang, C., 
+Agarwal,  S., Slama, K., Ray, A., Schulman,  J., Hilton, J., Kelton, F., Miller, L., Simens, 
+M., Askell, A., Welinder,  P., Christiano,  P., Leike, J., & Lowe, R. (2022b). Training 
+language  models to follow instructions  with human feedback.  https://arxiv.org/abs/
+2203.02155 .
+Papineni,  K., Roukos, S., Ward, T., & Zhu, W.-J. (2001). Bleu: A method for automatic  
+evaluation  of machine translation.  In ACL.
+Rafailov,  R., Sharma, A., Mitchell,  E., Ermon, S., Manning,  C. D., & Finn, C. (2024). Direct 
+preference  optimization:  Your language  model is secretly a reward model. https://
+arxiv.org/abs/2305.18290 .
+Rafailov,  R., Sharma, A., Mitchell,  E., Manning,  C. D., Ermon, S., & Finn, C. (2023). 
+Direct preference  optimization:  Your language  model is secretly a reward model. In 
+Thirty-seventh  conference  on neural information  processing  systems . https://openreview.
+net/forum?id=HPuSIXJaa9 .
+Rouzegar,  H., & Makrehchi,  M. (2024). Enhancing  text classiﬁcation  through LLM-driven  
+active learning and human annotation.  https://arxiv.org/abs/2406.12114 .
+Saunders,  W., Yeh, C., Wu, J., Bills, S., Ouyang, L., Ward, J., & Leike, J. (2022). Self-
+critiquing  models for assisting human evaluators.  https://arxiv.org/abs/2206.05802 .
+Settles, B. (2009). Active learning literature  survey. https://api.semanticscholar.org/
+CorpusID:324600 .
+Sun, S., Li, J., Yuan, W., Yuan, R., Li, W., & Liu, P. (2024). The critique of critique. https:
+//arxiv.org/abs/2401.04518 .
+Tang, Z., Li, Z., Xiao, Z., Ding, T., Sun, R., Wang, B., Liu, D., Huang, F., Liu, T., Yu, B., & 
+Lin, J. (2025). Enabling  scalable oversight  via self-evolving  critic. https://arxiv.org/
+abs/2501.05727 .
+Tao, C., Mou, L., Zhao, D., & Yan, R. (2017). Ruber: An unsupervised  method for automatic  
+evaluation  of open-domain  dialog systems. In Aaai conference  on artiﬁcial intelligence .
+Team, Q. (2024). Qwen2.5:  A party of foundation  models. https://qwenlm.github.io/blog/
+qwen2.5/ .
+Tian, L., Ziao, M., Yanghao,  Z., Chen, X., & Xianling,  M. (2024). A survey of auto-
+matic evaluation  on the quality of generated  text. In X. Zhao (Ed.), Proceedings  of the 
+23rd Chinese national conference  on computational  linguistics  (volume 2: Frontier forum)
+(pp. 169–196).  Taiyuan, China: Chinese Information  Processing  Society of China. 
+https://aclanthology.org/2024.ccl-2.10/ .
+Toy, J., MacAdam,  J., & Tabor, P. (2024). Metacognition  is all you need? Using introspec-
+tion in generative  agents to improve goal-directed  behavior.  arXiv:2401.10910
+Verga, P., Hofstatter,  S., Althammer,  S., Su, Y., Piktus, A., Arkhangorodsky,  A., Xu, M., 
+White, N., & Lewis, P. (2024). Replacing  judges with juries: Evaluating  LLM genera-
+tions with a panel of diverse models. https://arxiv.org/abs/2404.18796 .
+Wang, J., Liang, Y., Meng, F., Sun, Z., Shi, H., Li, Z., Xu, J., Qu, J., & Zhou, J. (2023a). 
+Is chatGPT a good NLG evaluator?  A preliminary  study. https://arxiv.org/abs/2303.
+04048 .
+Wang, P., Xu, A., Zhou, Y., Xiong, C., & Joty, S. (2024). Direct judgement  preference  
+optimization.  https://arxiv.org/abs/2409.14664 .
+Wang, T., Yu, P., Tan, X. E., O’Brien, S., Pasunuru,  R., Dwivedi-Yu,  J., Golovneva,  O., 
+Zettlemoyer,  L., Fazel-Zarandi,  M., & Celikyilmaz,  A. (2023b). Shepherd:  A critic for 
+language  model generation.
+Wang, Y., & Zhao, Y. (2024). Metacognitive  prompting  improves  understanding  in large 
+language  models. https://arxiv.org/abs/2308.05342 .
+Wu, T., Yuan, W., Golovneva,  O., Xu, J., Tian, Y., Jiao, J., Weston, J., & Sukhbaatar,  S. 
+(2024). Meta-rewarding  language  models: Self-improving  alignment  with LLM-as-a-
+meta-judge.  https://arxiv.org/abs/2407.19594 .
+Yu, Y., Chen, Z., Zhang, A., Tan, L., Zhu, C., Pang, R. Y., Qian, Y., Wang, X., Gururangan,  
+S., Zhang, C., Kambadur,  M., Mahajan,  D., & Hou, R. (2024). Self-generated  critiques 
+boost reward modeling  for language  models. https://arxiv.org/abs/2411.16646 .
+Yuan, W., Pang, R. Y., Cho, K., Li, X., Sukhbaatar,  S., Xu, J., & Weston, J. (2024). Self-
+rewarding  language  models. https://arxiv.org/abs/2401.10020 .
+Zhang, C., D’Haro, L. F., Friedrichs,  T., & Li, H. (2022). Mdd-eval:  Self-training  on 
+augmented  data for multi-domain  dialogue evaluation.  https://arxiv.org/abs/2112.
+07194 .
+Zhang, T., Kishore, V., Wu, F., Weinberger,  K. Q., & Artzi, Y. (2020). Bertscore:  Evaluating  
+text generation  with bert. https://arxiv.org/abs/1904.09675 .
+Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, 
+D., Xing, E., Zhang, H., Gonzalez,  J. E., & Stoica, I. (2023a). Judging LLM-as-a-judge  
+with MT-bench  and chatbot arena. In Thirty-seventh  conference  on neural information  
+processing  systems datasets and benchmarks  track . https://openreview.net/forum?id=
+uccHPGDlao .
+Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., 
+Xing, E. P., Zhang, H., Gonzalez,  J. E., & Stoica, I. (2023b). Judging LLM-as-a-judge  
+with MT-bench  and chatbot arena. https://arxiv.org/abs/2306.05685 .
+Chen Xu received B S, M S, and PhD degrees in Computer  
+Science and Technology  from the Beijing University  of Tech-
+nology in 2014, 2019, and 2023. He currently  leads the NLP 
+group at the Key Laboratory  of Brain Health Intelligent  As-
+sessment  and Intervention  of the Ministry of Education,  Bei-
+jing Institute of Technology  (BIT), China. He is a recipient  of 
+both the Nationally  Funded Postdoctoral  Fellowship  Program 
+and the BIT Teli Postdoctoral  Fellowship  Program (2023). 
+His research interests include LLMs and computational  psy-
+chophysiology.Expert  Systems  With Applications  300 (2026)  129878  
+15 
+
+C. Xu et al.
+Tian Lan continues  his studies at the School of Computer  
+Science at Beijing Institute of Technology  (BIT) as a master’s 
+and doctoral student, focusing primarily  on text generation,  
+automatic  evaluation  of text generation  quality, and the cri-
+tique capability  of large-scale  language  models. In 2019, he 
+obtained a Bachelor’s  degree in Computer  Science and Tech-
+nology from BIT. He has multiple internships  at well-known  
+research institutions,  including  Tencent AI Lab and Shanghai  
+AI Lab.
+Zhenyu Lv is currently  pursuing his M S degree in Computer  
+Technology  at Beijing Institute of Technology.  He has pub-
+lished in IEEE Virtual Reality and 3D User Interfaces  (VR). 
+His research interests include LLM, multimodal  deep learn-
+ing.
+Qunxi Dong is an associate  Professor  at Institute of Engi-
+neering Medicine,  Beijing Institute of Technology.  He was 
+the postdoctoral  researcher  of Neuroimaging  at Arizona State 
+University.  He graduated  from Lanzhou University.  During 
+his doctoral studying,  he had ever visited to Institute of Neu-
+roscience  and Medicine  (INM) in Germany  for more than two 
+years. He was familiar with MEG. EEG and MRI data process-
+ing methods.  His research interests include aﬀective com-
+puting, neuroimaging  computing,  and computational  psy-
+chophysiology.
+Jieshuo Zhang received the PhD degree in optical engineer-
+ing from Hebei University,  Baoding, China, in 2022. Her re-
+search interests include feature extraction  of ECG signals and 
+intelligent  analysis of cardiovascular  diseases.
+Heyan Huang received her PhD from the Institute of Com-
+puting Technology,  Chinese Academy  of Sciences.  She is a 
+Professor  and Director at the Institute of Artiﬁcial  Intelli-
+gence, Beijing Institute of Technology,  specializing  in lan-
+guage processing,  machine translation,  and intelligent  appli-
+cations. Prof. Huang has won the First and Second Prize of 
+National Science and Technology  Progress.  She is the Vice 
+President  of the Chinese Information  Processing  Society of 
+China and the China Software  Industry Association;  an Ex-
+ecutive Director of the Chinese Institute of Electronics;  the 
+member of the expert review team of the National Natural 
+Science Foundation  of China; and a Fellow of the Chinese 
+Association  for Artiﬁcial  Intelligence.
+Minqiang  Yang received the PhD degree in computer  science 
+from Lanzhou University,  Lanzhou,  China, in 2022. He is cur-
+rently an Associate  Professor  with Gansu Provincial  Key Lab-
+oratory of Wearable  Computing,  School of Information  Sci-
+ence and Engineering,  Lanzhou University.  He has published  
+over 20 articles in prestigious  journals and conferences,  in-
+cluding IEEE Transactions  on Knowledge  and Data Engineer-
+ing, IEEE Wireless Communications  and IEEE Transactions  on 
+Circuits and Systems for Video Technology,  and holds over 
+ten patents. His current research interests include aﬀective 
+computing,  image processing,  human–computer  interaction,  
+and pervasive  computing,  particularly  focusing on intelligent  
+diagnostic  and therapeutic  technologies  for aﬀective disor-
+ders.
+Bin Hu (Fellow, IEEE) received the PhD degree in computer  
+science from the Institute of Computing  Technology,  Chinese 
+Academy  of Sciences,  Beijing, China, in 1998. He is a (Full) 
+Professor  and the Dean of the School of Medical Technol-
+ogy at Beijing Institute of Technology,  China. He is a Na-
+tional Distinguished  Expert, Chief Scientist of 973 as well 
+as National Advanced  Worker in 2020. He is a Fellow of 
+IEEE/IET/AAIA  and IET Fellow Assessor & Fellowship  Advi-
+sor. He serves as the Editor-in-Chief  for the IEEE Transactions  
+on Computational  Social Systems and an Associate  Editor for 
+IEEE Transactions  on Aﬀective  Computing.  He is one of Clar-
+ivate Highly Cited Researchers,  World’s Top 2 % Scientists  
+and 0.05 % Highly Ranked Scholar from ScholarGPS.Expert  Systems  With Applications  300 (2026)  129878  
+16 
