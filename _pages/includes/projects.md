@@ -6,6 +6,10 @@
 VR Museum \\
 Lead Author
 
+- For intelligent guidance in VR museum scenarios, this project integrates eye tracking, gaze estimation, and salient object detection to enable automatic artifact narration based on users’ visual attention.
+- A multi-stage progressive training strategy was adopted to optimize Wav2Lip and DINet, improving lip-sync performance of digital humans; in addition, a Local-to-Global hierarchical salient object detection model based on spatial-channel attention was proposed, achieving an approximately 10% improvement in MAE over the SOTA.
+- One software copyright has been filed.
+
 </div>
 </div>
 
