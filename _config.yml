@@ -89,7 +89,7 @@ exclude:
   - tmp
   - vendor
   # - google_scholar_crawler
-  - github_myprofile_updater
+  #- github_myprofile_updater
 keep_files:
   - .git
   - .svn
