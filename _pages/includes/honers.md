@@ -1,6 +1,6 @@
 # 🏆 Selected Honors and Awards
-- *2024.10* National Scholarship (Top 1%)
-- *2024.12* The Special Prize Scholarship (Top 2%)
+- *2024.10* National Scholarship (Top 0.2%)
+- *2024.12* The Special Prize Scholarship (Top 1%)
 - *2023.12, 2022.12* The First Prize Scholarship
 - *2024.12, 2023.12* The First Prize Scholarship for Science and Technology Innovation
 - *2023.12* The Social Contribution Scholarship
