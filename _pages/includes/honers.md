@@ -1,4 +1,4 @@
-# 🏆 Honors and Awards
+# 🏆 Selected Honors and Awards
 - *2024.10* National Scholarship (Top 1%)
 - *2024.12* The Special Prize Scholarship (Top 2%)
 - *2023.12, 2022.12* The First Prize Scholarship
