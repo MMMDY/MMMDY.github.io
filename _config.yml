@@ -6,7 +6,7 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-title                    : "Zhenyu Lyu (吕镇宇)"
+title                    : "Zhenyu Lyu 吕镇宇"
 description              : "Focusing on LLM, Multimodal AI"
 repository               : "MMMDY/MMMDY.github.io"
 google_scholar_stats_use_cdn : true
@@ -21,7 +21,7 @@ baidu_site_verification  :
 
 # Site Author
 author:
-  name             : "Zhenyu Lyu (吕镇宇)"
+  name             : "Zhenyu Lyu 吕镇宇"
   avatar           : "images/icon.png"
   bio              : ""
   location         : "Beijing"
