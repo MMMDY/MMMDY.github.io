@@ -1196,7 +1196,7 @@ obtained a Bachelor’s  degree in Computer  Science and Tech-
 nology from BIT. He has multiple internships  at well-known  
 research institutions,  including  Tencent AI Lab and Shanghai  
 AI Lab.
-Zhenyu Lv is currently  pursuing his M S degree in Computer  
+Zhenyu Lyu is currently  pursuing his M S degree in Computer  
 Technology  at Beijing Institute of Technology.  He has pub-
 lished in IEEE Virtual Reality and 3D User Interfaces  (VR). 
 His research interests include LLM, multimodal  deep learn-
