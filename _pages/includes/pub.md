@@ -1,11 +1,11 @@
 # 📝 Publications 
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">VR 2024</div><img src='images/acl_puppet_method.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ACL 2026</div><img src='images/vsp_change_state.gif' alt="PUPPET state change demo" width="100%" style="margin-bottom: 10px;"><img src='images/acl_puppet_method.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
-<span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [PUPPET: Neural-Symbolic Standardized Patients for Mental Health.](https://aclanthology.org/2026.acl-long.121.pdf)\\
-Chen Xu, Yu Ji, **Zhenyu Lyu<sup>*</sup>**, Yang Yi, Yizhe Yang, Luyao Ji..
+<span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [PUPPET: Neural-Symbolic Standardized Patients for Mental Health](https://aclanthology.org/2026.acl-long.121.pdf)\\
+Chen Xu, Yu Ji, **Zhenyu Lyu<sup>*</sup>**, Yang Yi, Yizhe Yang, Luyao Ji.. \\
 <span style="background-color: #FCF8E3; color: black">(**Corresponding author/Second student author**)</span>  \\
 <span style="background-color: #FCF8E3; color: black">**ACL 2026 Main Oral**</span>
 
@@ -15,6 +15,25 @@ Chen Xu, Yu Ji, **Zhenyu Lyu<sup>*</sup>**, Yang Yi, Yizhe Yang, Luyao Ji..
 - Validated the advantage of combining LLM expressiveness with symbolic controllability across CBT, MI, and 12356 clinical training scenarios; achieved 74.00% MI psychological-state accuracy under DeepSeek-V3.2-chat, +24pp over baseline, and accurately distinguished expert, novice, and high-risk intervention trajectories, improving expert feedback quality and novice training confidence
 </div>
 </div>
+
+
+
+
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">Preprint</div><img src='images/donoharm_method.png' alt="sym" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
+
+<span style="background-color: #d5f6d8; color: black">**Preprint**</span> [First, Do No Harm: AI Supervisor Scaffolds Novice Growth in Counselor Education](https://arxiv.org/pdf/2508.09042)\\
+Chen Xu, **Zhenyu Lyu**, Tian Lan, Yang Yi, Yu Ji, Luyao Ji, Jian Shen.. \\
+<span style="background-color: #FCF8E3; color: black">(**First student author**)</span>  
+<!-- \\ <span style="background-color: #FCF8E3; color: black">****</span> -->
+- Defined the AI Supervisor feedback task for novice counselor training: from a multi-turn counselor--client dialogue, the model locates risky utterances (where), identifies violated principles (which), and generates pedagogical feedback for improvement (why); addressed scarce real clinical violations and the limitation that AI counselors optimize answers rather than teach
+- Built ETHICSCAFF, a 9,915-sample human-in-the-loop dataset, using 15 novice ethical-violation categories to synthesize multi-turn dialogues between AI novices and simulated clients; trained with SFT + GRPO and proposed Novice Growth Reward, which uses gains in a frozen novice model's localization/classification ability before and after reading feedback as a proxy RL reward
+- Qwen3-14B achieved 94.37\% F1 in violation-principle classification, a 144.1% relative gain over the base model; Qwen3-8B achieved 74.24% F1 in problematic-utterance localization; supervisor feedback improved novice responses across six clinical metrics in simulation and significantly raised eight counseling-task confidence metrics in a real student study
+[**Project**]() <strong></strong>
+
+</div>
+</div>
+
 
 
 
@@ -34,7 +53,7 @@ Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, **Zhenyu Lyu<sup>†</sup>**, Hey
 </div>
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">VR 2024</div><img src='images/vocing_demo.gif' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">VR 2024</div><img src='images/vocing_demo.gif' alt="sym" width="100%" style="margin-bottom: 10px;"><img src='images/vocing.png' alt="vocing result" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [Voicing Your Emotion: Integrating Emotion and Identity in Cross-Modal 3D Facial Animations](https://ieeexplore.ieee.org/document/10536431)\\
