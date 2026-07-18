@@ -10,6 +10,7 @@ title                    : "Zhenyu Lyu 吕镇宇"
 description              : "Focusing on LLM, Multimodal AI"
 repository               : "MMMDY/MMMDY.github.io"
 google_scholar_stats_use_cdn : true
+visitor_counter              : true
 
 # google analytics
 google_analytics_id      : 

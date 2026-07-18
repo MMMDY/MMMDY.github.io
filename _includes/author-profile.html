@@ -106,6 +106,9 @@
       {% if author.googlescholar %}
         <li><a href="{{ author.googlescholar }}"><i class="fas fa-fw fa-graduation-cap"></i> Google Scholar</a></li>
       {% endif %}
+      {% if site.visitor_counter %}
+        <li class="author__visitor-counter"><i class="fas fa-fw fa-eye" aria-hidden="true"></i> Visitors: <span id="busuanzi_site_uv">Loading...</span></li>
+      {% endif %}
       {% if author.pubmed %}
         <li><a href="{{ author.pubmed }}"><i class="ai ai-pubmed-square ai-fw"></i> PubMed</a></li>
       {% endif %}
