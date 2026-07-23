@@ -5,7 +5,7 @@
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [PUPPET: Neural-Symbolic Standardized Patients for Mental Health](https://aclanthology.org/2026.acl-long.121.pdf)\\
-Chen Xu, Yu Ji, <strong style="color: black;">Zhenyu Lyu<sup>*</sup></strong>, Yang Yi, Yizhe Yang, Luyao Ji, Chaoyi Chen, Xianyang Wang, Tian Lan, Zhihua Wang，Juan Wang, Xunde Dong, Fuze Tian, Qunxi Dong, Bin Hu\\
+Chen Xu, Yu Ji, <strong style="color: black;">Zhenyu Lyu<sup>†</sup></strong>, Yang Yi, Yizhe Yang, Luyao Ji, Chaoyi Chen, Xianyang Wang, Tian Lan, Zhihua Wang，Juan Wang, Xunde Dong, Fuze Tian, Qunxi Dong, Bin Hu\\
 <span style="background-color: #FCF8E3; color: black">(**Corresponding author/Second student author**)</span>  \\
 <span style="background-color: #FCF8E3; color: black">**ACL 2026 Main Oral**</span>
 
@@ -41,7 +41,7 @@ Chen Xu, <strong style="color: black;">Zhenyu Lyu</strong>, Tian Lan, Yang Yi, Y
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[JCR Q1, 中科院一区Top]**</span> [Bridging the Gap Between Data Distribution and Model: Dynamic Data Distribution Optimization for Improving Critique Capabilities of Large Language Models](https://www.sciencedirect.com/science/article/pii/S0957417425034931) \\
-Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, <strong style="color: black;">Zhenyu Lyu<sup>†</sup></strong>, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang, Bin Hu   <span style="background-color: #FCF8E3; color: black">(**First author**)</span> \\
+Chen Xu<sup>\*</sup>, Tian Lan<sup>\*</sup>, <strong style="color: black;">Zhenyu Lyu<sup>\*</sup></strong>, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang, Bin Hu   <span style="background-color: #FCF8E3; color: black">(**Co-First author**)</span> \\
 <span style="background-color: #FCF8E3; color: black">**Expert Systems With Applications 2026**</span>
 
 [**Project**](https://github.com/gmftbyGMFTBY/DIDD) <strong></strong>
