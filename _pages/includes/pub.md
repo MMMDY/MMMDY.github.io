@@ -5,7 +5,7 @@
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [PUPPET: Neural-Symbolic Standardized Patients for Mental Health](https://aclanthology.org/2026.acl-long.121.pdf)\\
-Chen Xu, Yu Ji, **Zhenyu Lyu<sup>*</sup>**, Yang Yi, Yizhe Yang, Luyao Ji.. \\
+Chen Xu, Yu Ji, <strong style="color: black;">Zhenyu Lyu<sup>*</sup></strong>, Yang Yi, Yizhe Yang, Luyao Ji, Chaoyi Chen, Xianyang Wang, Tian Lan, Zhihua Wang，Juan Wang, Xunde Dong, Fuze Tian, Qunxi Dong, Bin Hu\\
 <span style="background-color: #FCF8E3; color: black">(**Corresponding author/Second student author**)</span>  \\
 <span style="background-color: #FCF8E3; color: black">**ACL 2026 Main Oral**</span>
 
@@ -23,7 +23,7 @@ Chen Xu, Yu Ji, **Zhenyu Lyu<sup>*</sup>**, Yang Yi, Yizhe Yang, Luyao Ji.. \\
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**Preprint**</span> [First, Do No Harm: AI Supervisor Scaffolds Novice Growth in Counselor Education](https://arxiv.org/pdf/2508.09042)\\
-Chen Xu, **Zhenyu Lyu**, Tian Lan, Yang Yi, Yu Ji, Luyao Ji, Jian Shen.. \\
+Chen Xu, <strong style="color: black;">Zhenyu Lyu</strong>, Tian Lan, Yang Yi, Yu Ji, Luyao Ji, Jian Shen, Zhihua Wang, Leyang Cui, Jieshuo Zhang, Xiaohua Wan, Qunxi Dong, Minqiang Yang, Juan Wang, Xiuling Liu, Bin Hu\\
 <span style="background-color: #FCF8E3; color: black">(**First student author**)</span>  
 <!-- \\ <span style="background-color: #FCF8E3; color: black">****</span> -->
 - Defined the AI Supervisor feedback task for novice counselor training: from a multi-turn counselor--client dialogue, the model locates risky utterances (where), identifies violated principles (which), and generates pedagogical feedback for improvement (why); addressed scarce real clinical violations and the limitation that AI counselors optimize answers rather than teach
@@ -41,7 +41,7 @@ Chen Xu, **Zhenyu Lyu**, Tian Lan, Yang Yi, Yu Ji, Luyao Ji, Jian Shen.. \\
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[JCR Q1, 中科院一区Top]**</span> [Bridging the Gap Between Data Distribution and Model: Dynamic Data Distribution Optimization for Improving Critique Capabilities of Large Language Models](https://www.sciencedirect.com/science/article/pii/S0957417425034931) \\
-Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, **Zhenyu Lyu<sup>†</sup>**, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang, Bin Hu   <span style="background-color: #FCF8E3; color: black">(**First author**)</span> \\
+Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, <strong style="color: black;">Zhenyu Lyu<sup>†</sup></strong>, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang, Bin Hu   <span style="background-color: #FCF8E3; color: black">(**First author**)</span> \\
 <span style="background-color: #FCF8E3; color: black">**Expert Systems With Applications 2026**</span>
 
 [**Project**](https://github.com/gmftbyGMFTBY/DIDD) <strong></strong>
@@ -57,7 +57,7 @@ Chen Xu<sup>†</sup>, Tian Lan<sup>†</sup>, **Zhenyu Lyu<sup>†</sup>**, Hey
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [Voicing Your Emotion: Integrating Emotion and Identity in Cross-Modal 3D Facial Animations](https://ieeexplore.ieee.org/document/10536431)\\
-Wenfeng Song, **Zhenyu Lyu**, Xuan Wang, Xia Hou  <span style="background-color: #FCF8E3; color: black">(**First student author**)</span>  \\
+Wenfeng Song, <strong style="color: black;">Zhenyu Lyu</strong>, Xuan Wang, Xia Hou  <span style="background-color: #FCF8E3; color: black">(**First student author**)</span>  \\
 <span style="background-color: #FCF8E3; color: black">**2024 IEEE Conference Virtual Reality and 3D User Interfaces (VR)**</span>
 
 
