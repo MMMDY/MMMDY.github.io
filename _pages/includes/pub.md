@@ -1,7 +1,7 @@
 # 📝 Publications 
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ACL 2026</div><img src='images/vsp_change_state.gif' alt="PUPPET state change demo" width="100%" style="margin-bottom: 10px;"><img src='images/acl_puppet_method.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ACL 2026</div><img src='images/vsp_change_state.gif' alt="PUPPET state change demo" width="100%" style="margin-bottom: 30px;"><img src='images/acl_puppet_method.png' alt="sym" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**[CCF-A]**</span> [PUPPET: Neural-Symbolic Standardized Patients for Mental Health](https://aclanthology.org/2026.acl-long.121.pdf)\\
@@ -19,7 +19,7 @@ Chen Xu, Yu Ji, <strong style="color: black;">Zhenyu Lyu<sup>†</sup></strong>,
 
 
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">Preprint</div><img src='images/donoharm_method.png' alt="sym" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">Preprint</div><img src='images/donoharm_method.png' alt="sym" width="100%" style="margin-bottom: 40px;"><img src='images/data_construct.png' alt="ETHICSCAFF data construction" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 <span style="background-color: #d5f6d8; color: black">**Preprint**</span> [First, Do No Harm: AI Supervisor Scaffolds Novice Growth in Counselor Education](https://arxiv.org/pdf/2508.09042)\\
