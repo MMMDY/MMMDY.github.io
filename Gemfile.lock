@@ -277,7 +277,6 @@ GEM
       tzinfo (>= 1.0.0)
     unicode-display_width (1.8.0)
     uri (1.1.1)
-    wdm (0.1.1)
     webrick (1.9.2)
 
 PLATFORMS
@@ -289,7 +288,6 @@ DEPENDENCIES
   jekyll-feed
   jekyll-sitemap
   tzinfo-data
-  wdm (~> 0.1.0)
 
 CHECKSUMS
   activesupport (8.1.2) sha256=88842578ccd0d40f658289b0e8c842acfe9af751afee2e0744a7873f50b6fdae
@@ -390,7 +388,6 @@ CHECKSUMS
   tzinfo-data (1.2026.1) sha256=4ea36519ae5ae2cf0fad471207a519be006daf42e3b2359ee9e9c53f113609fd
   unicode-display_width (1.8.0) sha256=0292132d364d59fcdd83f144910c48b3c8332b28a14c5c04bb093dd165600488
   uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
-  wdm (0.1.1) sha256=28406f5f236796019bea5b2a85e37cbcd229ec928c8b68261947a44eec15b474
   webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
 
 BUNDLED WITH

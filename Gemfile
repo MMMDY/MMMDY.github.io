@@ -10,5 +10,5 @@ end
 
 platforms :mingw, :mswin, :x64_mingw, :jruby do
   gem "tzinfo-data"
-  gem "wdm", "~> 0.1.0"
+  gem "wdm", "~> 0.1.0" if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2")
 end

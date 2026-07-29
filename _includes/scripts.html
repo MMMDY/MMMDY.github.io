@@ -2,6 +2,29 @@
 
 {% if site.visitor_counter %}
   <script src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js" defer></script>
+  <script>
+    (() => {
+      const visitorOffset = 790;
+      const source = document.getElementById("busuanzi_site_uv");
+      const display = document.getElementById("visitor_count");
+
+      if (!source || !display) return;
+
+      const updateVisitorCount = () => {
+        const actualCount = Number.parseInt(source.textContent, 10);
+        if (Number.isFinite(actualCount)) {
+          display.textContent = actualCount + visitorOffset;
+        }
+      };
+
+      new MutationObserver(updateVisitorCount).observe(source, {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+      updateVisitorCount();
+    })();
+  </script>
 {% endif %}
 
 {% include analytics.html %}
