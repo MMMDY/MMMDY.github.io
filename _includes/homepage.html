@@ -1,0 +1,119 @@
+{% assign lang = page.lang | default: "en" %}
+{% assign ui = site.data.i18n[lang] %}
+{% assign content_data = site.data.content %}
+
+<span class="anchor" id="about-me"></span>
+<div style="color: black;">
+  {{ content_data.intro[lang] | markdownify }}
+</div>
+
+<span class="anchor" id="publications"></span>
+<h1>{{ ui.sections.publications }}</h1>
+
+{% for paper in content_data.publications %}
+  <div class="paper-box">
+    <div class="paper-box-image">
+      <div>
+        <div class="badge">{{ paper.badge[lang] }}</div>
+        {% for image in paper.images %}
+          <img src="{{ image.src | relative_url }}" alt="{{ image.alt }}" width="100%"{% if image.style %} style="{{ image.style }}"{% endif %}>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="paper-box-text">
+      {% for classification in paper.classifications %}
+        {% assign classification_text = classification.text[lang] %}
+        {% if classification.kind == "green" %}
+          <span style="background-color: #d5f6d8; color: black"><strong>{{ classification_text }}</strong></span>
+        {% else %}
+          <span style="background-color: #FCF8E3; color: black"><strong>{{ classification_text }}</strong></span>
+        {% endif %}
+      {% endfor %}
+      <a href="{{ paper.url }}">{{ paper.title }}</a><br>
+      {{ paper.authors }}<br>
+      {% assign author_note = paper.author_note[lang] %}
+      {% if author_note %}
+        <span style="background-color: #FCF8E3; color: black"><strong>{{ author_note }}</strong></span><br>
+      {% endif %}
+      {% assign venue = paper.venue[lang] %}
+      {% if venue %}
+        <span style="background-color: #FCF8E3; color: black"><strong>{{ venue }}</strong></span>
+      {% endif %}
+
+      {% assign has_links = false %}
+      {% for link in paper.links %}
+        {% if link.url %}
+          {% assign has_links = true %}
+        {% endif %}
+      {% endfor %}
+      {% if has_links %}
+        <p class="publication-links">
+          {% for link in paper.links %}
+            {% if link.url %}
+              <a href="{{ link.url }}"><strong>{{ ui.links[link.key] }}</strong></a>{% unless forloop.last %}<span class="publication-link-separator"></span>{% endunless %}
+            {% endif %}
+          {% endfor %}
+        </p>
+      {% endif %}
+
+      <ul>
+        {% for bullet in paper.bullets[lang] %}
+          <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endfor %}
+
+<span class="anchor" id="projects"></span>
+<h1>{{ ui.sections.projects }}</h1>
+
+{% for project in content_data.projects %}
+  <div class="paper-box">
+    <div class="paper-box-image">
+      <div>
+        {% for image in project.images %}
+          <img src="{{ image.src | relative_url }}" alt="{{ image.alt }}" width="100%">
+        {% endfor %}
+      </div>
+    </div>
+    <div class="paper-box-text">
+      <strong>{{ project.title }}</strong>
+      <ul>
+        {% for bullet in project.bullets[lang] %}
+          <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endfor %}
+
+<span class="anchor" id="honors"></span>
+<h1>{{ ui.sections.honors }}</h1>
+<ul>
+  {% for award in content_data.honors %}
+    <li><em>{{ award.date }}</em>
+      {% if award.link %}
+        <a href="{{ award.link.url }}">{{ award.link.text[lang] }}</a>
+      {% else %}
+        {{ award.text[lang] }}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
+<span class="anchor" id="education"></span>
+<h1>{{ ui.sections.education }}</h1>
+<ul>
+  {% for item in content_data.education %}
+    <li><em>{{ item.dates }}</em>, {{ item.degree[lang] }}, {{ item.school[lang] }}.</li>
+  {% endfor %}
+</ul>
+
+<span class="anchor" id="internships"></span>
+<h1>{{ ui.sections.internships }}</h1>
+<ul>
+  {% for item in content_data.internships %}
+    <li><em>{{ item.dates }}</em>, <a href="{{ item.url }}">{{ item.organization }}</a>, {{ item.role[lang] }}.</li>
+  {% endfor %}
+</ul>

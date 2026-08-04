@@ -1,4 +1,14 @@
-<script src="assets/js/main.min.js"></script>
+<script src="{{ '/assets/js/main.min.js' | relative_url }}"></script>
+
+<script>
+  document.querySelectorAll('[data-language-switch]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      if (window.location.hash) {
+        this.href = this.dataset.target + window.location.hash;
+      }
+    });
+  });
+</script>
 
 {% if site.visitor_counter %}
   <script src="https://cdn.busuanzi.cc/busuanzi/3.6.9/busuanzi.min.js" defer></script>

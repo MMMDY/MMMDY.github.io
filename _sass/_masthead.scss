@@ -34,12 +34,39 @@
 }
 
 .masthead__menu {
+  display: flex;
+  align-items: center;
 
   ul {
     margin: 0;
     padding: 0;
     clear: both;
     list-style-type: none;
+  }
+
+  .greedy-nav {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .language-switcher {
+    flex: 0 0 auto;
+    margin-left: .75rem;
+    padding: .35rem .7rem;
+    color: $masthead-link-color;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    font-family: $sans-serif;
+    font-size: $type-size-6;
+    font-weight: bold;
+    line-height: 1.5;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: $masthead-link-color-hover;
+      border-color: $masthead-link-color-hover;
+    }
   }
 }
 
@@ -60,5 +87,4 @@
     font-weight: 700;
   }
 }
-
 

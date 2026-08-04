@@ -1,0 +1,65 @@
+en:
+  html_lang: "en"
+  locale: "en_US"
+  title: "Zhenyu Lyu | Personal Homepage"
+  description: "Zhenyu Lyu's personal homepage, research interests, publications, projects, and academic experience."
+  switch:
+    label: "中文"
+    aria: "Switch to Chinese"
+    path: "/zh/"
+  nav:
+    home: "Homepage"
+    about: "About Me"
+    publications: "Publications"
+    honors: "Selected Honors and Awards"
+    projects: "Projects"
+    education: "Education"
+    internships: "Internships"
+  links:
+    project: "Project"
+    code: "Code"
+  sidebar:
+    tagline: "Focusing on LLM applications and multimodal AI"
+    location: "Beijing"
+    website: "Website"
+    email: "Email"
+    visitors: "Visitors"
+  sections:
+    publications: "Publications"
+    projects: "Projects"
+    honors: "Selected Honors and Awards"
+    education: "Education"
+    internships: "Internships"
+
+zh:
+  html_lang: "zh-CN"
+  locale: "zh_CN"
+  title: "吕镇宇 | 个人主页"
+  description: "吕镇宇的个人主页，包含研究方向、论文、项目与学术经历。"
+  switch:
+    label: "EN"
+    aria: "切换到英文"
+    path: "/"
+  nav:
+    home: "主页"
+    about: "关于我"
+    publications: "论文发表"
+    honors: "荣誉与奖项"
+    projects: "项目经历"
+    education: "教育经历"
+    internships: "实习经历"
+  links:
+    project: "项目"
+    code: "代码"
+  sidebar:
+    tagline: "专注于大语言模型应用与多模态人工智能"
+    location: "北京"
+    website: "个人网站"
+    email: "邮箱"
+    visitors: "访问人数"
+  sections:
+    publications: "论文发表"
+    projects: "项目经历"
+    honors: "荣誉与奖项"
+    education: "教育经历"
+    internships: "实习经历"

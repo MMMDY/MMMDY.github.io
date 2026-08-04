@@ -1,0 +1,251 @@
+intro:
+  en: >-
+    My research interests include LLM applications, LLM-as-a-judge, post-training
+    for LLMs, controllable content generation, and virtual humans. Please feel
+    free to email me at [damiemie0@outlook.com](mailto:damiemie0@outlook.com).
+
+    I am pursuing my master's degree at the Key Laboratory of Brain Health
+    Intelligent Assessment and Intervention of the Ministry of Education,
+    Beijing Institute of Technology (BIT), advised by [Chen Xu 徐晨](https://bhelaborg.wpcomstaging.com/%E5%BE%90%E6%99%A8/)
+    and [Bin Hu 胡斌](https://bhelaborg.wpcomstaging.com/%E8%83%A1%E6%96%8C/).
+
+    I graduated from the School of Computer at Beijing Information Science and
+    Technology University with a bachelor's degree, advised by [Wenfeng Song
+    宋文凤](https://buaaswf.github.io/).
+  zh: >-
+    我的研究兴趣包括大语言模型应用、LLM-as-a-judge、大语言模型后训练、可控内容生成和虚拟人。欢迎通过
+    [damiemie0@outlook.com](mailto:damiemie0@outlook.com) 与我联系。
+
+    我目前在北京理工大学脑健康智能评估与干预教育部重点实验室攻读硕士学位，导师为[徐晨](https://bhelaborg.wpcomstaging.com/%E5%BE%90%E6%99%A8/)
+    和[胡斌](https://bhelaborg.wpcomstaging.com/%E8%83%A1%E6%96%8C/)教授。
+
+    我本科毕业于北京信息科技大学计算机学院，导师为[宋文凤](https://buaaswf.github.io/)教授。
+
+publications:
+  - badge:
+      en: "ACL 2026"
+      zh: "ACL 2026"
+    images:
+      - src: "images/vsp_change_state.gif"
+        alt: "PUPPET state change demo"
+        style: "margin-bottom: 30px;"
+      - src: "images/acl_puppet_method.png"
+        alt: "PUPPET method"
+    classifications:
+      - kind: "green"
+        text:
+          en: "CCF-A"
+          zh: "CCF-A"
+    title: "PUPPET: Neural-Symbolic Standardized Patients for Mental Health"
+    url: "https://aclanthology.org/2026.acl-long.121.pdf"
+    authors: "Chen Xu, Yu Ji, <strong style=\"color: black;\">Zhenyu Lyu<sup>†</sup></strong>, Yang Yi, Yizhe Yang, Luyao Ji, Chaoyi Chen, Xianyang Wang, Tian Lan, Zhihua Wang, Juan Wang, Xunde Dong, Fuze Tian, Qunxi Dong, Bin Hu"
+    author_note:
+      en: "Corresponding author/Second student author"
+      zh: "通讯作者/第二学生作者"
+    venue:
+      en: "ACL 2026 Main track Oral"
+      zh: "ACL 2026 Main track 受邀口头报告"
+    links:
+      - key: "project"
+        url: ""
+    bullets:
+      en:
+        - "Addressed the high cost and scarcity of human standardized patients in counselor training and the lack of interpretable state control in pure LLM baselines such as prompting, CoT, and memory agents; built a controllable, interpretable patient agent for training human counselors."
+        - "Proposed the PUPPET/PUPPET-TRAINER neural-symbolic framework with an Observe--Think--Behave architecture; used LLM Valuator/Generator modules for natural dialogue and flexible expression, and explicitly controlled the intervention--rule--state causal chain with expert rules, probabilistic logic, and probabilistic state machines."
+        - "Validated the advantage of combining LLM expressiveness with symbolic controllability across CBT, MI, and 12356 clinical training scenarios; achieved 74.0% MI psychological-state accuracy under DeepSeek-V3.2-chat, +24pp over baseline, and accurately distinguished expert, novice, and high-risk intervention trajectories, improving expert feedback quality and novice training confidence."
+      zh:
+        - "针对咨询师培训中真人标准化病人成本高、数量少，以及 prompting、CoT 和 memory agent 等纯大语言模型基线缺乏可解释状态控制的问题，构建了用于训练人类咨询师的可控、可解释病人智能体。"
+        - "提出采用 Observe--Think--Behave 架构的 PUPPET/PUPPET-TRAINER 神经符号框架；使用 LLM Valuator/Generator 模块实现自然对话与灵活表达，并通过专家规则、概率逻辑和概率状态机显式控制“干预—规则—状态”因果链。"
+        - "在 CBT、MI 和 12356 临床训练场景中验证了 LLM 表达能力与符号可控性结合的优势；在 DeepSeek-V3.2-chat 下实现 74.0% 的 MI 心理状态识别准确率，较基线提升 24 个百分点，并准确区分专家、新手和高风险干预轨迹，提升专家反馈质量与新手训练信心。"
+
+  - badge:
+      en: "Preprint"
+      zh: "预印本"
+    images:
+      - src: "images/donoharm_method.png"
+        alt: "ETHICSCAFF method"
+        style: "margin-bottom: 40px;"
+      - src: "images/data_construct.png"
+        alt: "ETHICSCAFF data construction"
+    classifications:
+      - kind: "green"
+        text:
+          en: "Preprint"
+          zh: "预印本"
+    title: "First, Do No Harm: AI Supervisor Scaffolds Novice Growth in Counselor Education"
+    url: "https://arxiv.org/pdf/2508.09042"
+    authors: "Chen Xu, <strong style=\"color: black;\">Zhenyu Lyu</strong>, Tian Lan, Yang Yi, Yu Ji, Luyao Ji, Jian Shen, Zhihua Wang, Leyang Cui, Jieshuo Zhang, Xiaohua Wan, Qunxi Dong, Minqiang Yang, Juan Wang, Xiuling Liu, Bin Hu"
+    author_note:
+      en: "First student author"
+      zh: "第一学生作者"
+    venue:
+      en: ""
+      zh: ""
+    links:
+      - key: "project"
+        url: "https://mmmdy.github.io/first-do-no-harm.github.io/"
+      - key: "code"
+        url: "https://github.com/MMMDY/first-do-no-harm"
+    bullets:
+      en:
+        - "Defined the AI Supervisor feedback task for novice counselor training: from a multi-turn counselor--client dialogue, the model locates risky utterances (where), identifies violated principles (which), and generates pedagogical feedback for improvement (why); addressed scarce real clinical violations and the limitation that AI counselors optimize answers rather than teach."
+        - "Built ETHICSCAFF, a 9,915-sample human-in-the-loop dataset, using 15 novice ethical-violation categories to synthesize multi-turn dialogues between AI novices and simulated clients; trained with SFT + GRPO and proposed Novice Growth Reward, which uses gains in a frozen novice model's localization/classification ability before and after reading feedback as a proxy RL reward."
+        - "Qwen3-14B achieved 94.37% F1 in violation-principle classification, a 144.1% relative gain over the base model; Qwen3-8B achieved 74.24% F1 in problematic-utterance localization; supervisor feedback improved novice responses across six clinical metrics in simulation and significantly raised eight counseling-task confidence metrics in a real student study."
+      zh:
+        - "定义了面向新手咨询师培训的 AI Supervisor 反馈任务：模型从多轮咨询师—来访者对话中定位风险话语（where）、识别违反的原则（which），并生成用于改进的教学反馈（why）；缓解了真实临床违规案例稀缺，以及 AI 咨询师只优化回答而不负责教学的问题。"
+        - "构建包含 9,915 个样本的人在回路 ETHICSCAFF 数据集，利用 15 类新手伦理违规合成 AI 新手与模拟来访者之间的多轮对话；采用 SFT + GRPO 训练，并提出 Novice Growth Reward，以冻结新手模型阅读反馈前后的定位/分类能力增益作为代理强化学习奖励。"
+        - "Qwen3-14B 在违规原则分类上达到 94.37% F1，较基础模型相对提升 144.1%；Qwen3-8B 在问题话语定位上达到 74.24% F1；在模拟实验中，监督反馈在六项临床指标上改善了新手回答，并在真实学生研究中显著提升了八项咨询任务信心指标。"
+
+  - badge:
+      en: "ESWA 2026"
+      zh: "ESWA 2026"
+    images:
+      - src: "images/eswa.png"
+        alt: "DIDD method"
+    classifications:
+      - kind: "green"
+        text:
+          en: "JCR Q1, CAS Category 1 Top"
+          zh: "JCR Q1，中科院一区 Top"
+    title: "Bridging the Gap Between Data Distribution and Model: Dynamic Data Distribution Optimization for Improving Critique Capabilities of Large Language Models"
+    url: "https://www.sciencedirect.com/science/article/pii/S0957417425034931"
+    authors: "Chen Xu<sup>*</sup>, Tian Lan<sup>*</sup>, <strong style=\"color: black;\">Zhenyu Lyu<sup>*</sup></strong>, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang, Bin Hu"
+    author_note:
+      en: "Co-First author"
+      zh: "共同第一作者"
+    venue:
+      en: "Expert Systems With Applications 2026"
+      zh: "Expert Systems With Applications 2026"
+    links:
+      - key: "project"
+        url: "https://github.com/gmftbyGMFTBY/DIDD"
+    bullets:
+      en:
+        - "Proposes DIDD, a dynamic iterative data distribution optimization framework that detects a model's vulnerable data distributions and builds tailored training datasets, solving the static data-model mismatch in LLM critique."
+        - "Systematically analyzes the impact of data type and text quality distributions on LLM critique ability, deriving heuristic optimal distribution guidelines for single/pair-wise critique tasks."
+        - "7B-scale LLMs optimized by DIDD outperform state-of-the-art 7B--13B baselines and even GPT-3.5-turbo on four critique benchmarks with superior data efficiency."
+      zh:
+        - "提出 DIDD 动态迭代数据分布优化框架，检测模型薄弱的数据分布并构建定制化训练集，解决大语言模型批评能力中的静态数据—模型错配问题。"
+        - "系统分析数据类型分布和文本质量分布对大语言模型批评能力的影响，为单样本和成对批评任务推导启发式最优分布准则。"
+        - "经 DIDD 优化的 7B 规模大语言模型在四个批评基准上超过当前最优的 7B--13B 基线模型，甚至超过 GPT-3.5-turbo，同时具备更高的数据效率。"
+
+  - badge:
+      en: "VR 2024"
+      zh: "VR 2024"
+    images:
+      - src: "images/vocing_demo.gif"
+        alt: "Voicing Your Emotion demo"
+        style: "margin-bottom: 10px;"
+      - src: "images/vocing.png"
+        alt: "Voicing Your Emotion results"
+    classifications:
+      - kind: "green"
+        text:
+          en: "CCF-A"
+          zh: "CCF-A"
+    title: "Voicing Your Emotion: Integrating Emotion and Identity in Cross-Modal 3D Facial Animations"
+    url: "https://ieeexplore.ieee.org/document/10536431"
+    authors: "Wenfeng Song, <strong style=\"color: black;\">Zhenyu Lyu</strong>, Xuan Wang, Xia Hou"
+    author_note:
+      en: "First student author"
+      zh: "第一学生作者"
+    venue:
+      en: "2024 IEEE Conference Virtual Reality and 3D User Interfaces (VR)"
+      zh: "2024 IEEE Conference Virtual Reality and 3D User Interfaces (VR)"
+    links:
+      - key: "project"
+        url: "https://mmmdy.github.io/vocing-your-emotion.github.io/"
+    bullets:
+      en:
+        - "Proposes a cross-modal 3D talking-face generation pipeline fusing speech audio, textual prompts, and emotion labels."
+        - "Breaks the limitations of traditional methods that merely synthesize lip movements from speech, enabling 3D avatars with customized appearances and rich emotional depth."
+      zh:
+        - "提出融合语音音频、文本提示和情感标签的跨模态三维说话人脸生成流程。"
+        - "突破传统方法只能根据语音合成唇部动作的限制，使三维虚拟人能够拥有定制化外观和丰富的情感表现。"
+
+projects:
+  - title: "VR Museum"
+    images:
+      - src: "images/museum_full.gif?v=20260310"
+        alt: "VR Museum demo"
+    bullets:
+      en:
+        - "For intelligent guidance in VR museum scenarios, this project integrates eye tracking, gaze estimation, and salient object detection to enable automatic artifact narration based on users' visual attention."
+        - "A multi-stage progressive training strategy was adopted to optimize Wav2Lip and DINet, improving lip-sync performance of digital humans; in addition, a Local-to-Global hierarchical salient object detection model based on spatial-channel attention was proposed, achieving an approximately 10% improvement in MAE over the SOTA."
+        - "One software copyright has been filed."
+      zh:
+        - "面向 VR 博物馆智能导览场景，项目融合眼动追踪、视线估计和显著性目标检测，根据用户的视觉注意力自动讲解展品。"
+        - "采用多阶段渐进式训练策略优化 Wav2Lip 和 DINet，提升数字人的唇形同步效果；同时提出基于空间—通道注意力的 Local-to-Global 分层显著性目标检测模型，使 MAE 相较 SOTA 提升约 10%。"
+        - "已申请一项软件著作权。"
+
+honors:
+  - date: "2024.10"
+    text:
+      en: "National Scholarship (Top 0.2%)"
+      zh: "国家奖学金（前 0.2%）"
+  - date: "2024.12"
+    text:
+      en: "The Special Prize Scholarship (Top 1%)"
+      zh: "特等奖学金（前 1%）"
+  - date: "2023.12, 2022.12"
+    text:
+      en: "The First Prize Scholarship"
+      zh: "一等奖学金"
+  - date: "2024.12, 2023.12"
+    text:
+      en: "The First Prize Scholarship for Science and Technology Innovation"
+      zh: "科技创新一等奖学金"
+  - date: "2023.12"
+    text:
+      en: "The Social Contribution Scholarship"
+      zh: "社会贡献奖学金"
+  - date: "2022.12"
+    text:
+      en: "Yuhou Scholarship"
+      zh: "学习优秀“雨厚”奖学金"
+  - date: "2024.10"
+    link:
+      url: "http://www.moe.gov.cn/srcsite/A08/s7056/202504/t20250418_1187857.html"
+      text:
+        en: "National Bronze Award, Main Track, China International College Students' Innovation Competition"
+        zh: "中国国际大学生创新大赛主赛道国家级铜奖"
+  - date: "2024.06"
+    text:
+      en: "Gold Award, Main Track, 2024 Challenge Cup Beijing College Students' Entrepreneurship Plan Competition"
+      zh: "“青创北京”2024 年“挑战杯”首都大学生创业计划竞赛主赛道金奖"
+  - date: "2024.11"
+    text:
+      en: "Third Prize, General Artificial Intelligence Special Competition, CCF Technology Entrepreneurship Competition"
+      zh: "CCF 科技创业大赛通用人工智能专项赛决赛三等奖"
+  - date: "2023.09"
+    text:
+      en: "National Third Prize, International Advanced Robotics and Simulation Technology Competition"
+      zh: "国际先进机器人及仿真技术大赛国家三等奖"
+  - date: "2022.10"
+    text:
+      en: "National Third Prize, NECCS (National English Competition for College Students)"
+      zh: "NECCS 全国大学生英语竞赛国家三等奖"
+
+education:
+  - dates: "2025.09 - 2028.06"
+    degree:
+      en: "Master"
+      zh: "硕士"
+    school:
+      en: "Beijing Institute of Technology"
+      zh: "北京理工大学"
+  - dates: "2018.09 - 2021.06"
+    degree:
+      en: "Undergraduate"
+      zh: "本科"
+    school:
+      en: "Beijing Information Science and Technology University"
+      zh: "北京信息科技大学"
+
+internships:
+  - dates: "2024.08 - 2024.10"
+    organization: "Digital China"
+    url: "https://www.digitalchina.com/"
+    role:
+      en: "AI Researcher"
+      zh: "AI算法研究员"

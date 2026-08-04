@@ -1,16 +1,26 @@
+{% assign lang = page.lang | default: "en" %}
+{% assign ui = site.data.i18n[lang] %}
+{% assign language_path = ui.switch.path %}
+{% if lang == "zh" %}
+  {% assign current_path = "/zh/" %}
+{% else %}
+  {% assign current_path = "/" %}
+{% endif %}
+
 <div class="masthead">
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
         <button><div class="navicon"></div></button>
         <ul class="visible-links">
-          <li class="masthead__menu-item masthead__menu-item--lg masthead__menu-home-item"><a href="#about-me">Homepage</a></li>
+          <li class="masthead__menu-item masthead__menu-item--lg masthead__menu-home-item"><a href="{{ current_path | relative_url }}#about-me">{{ ui.nav.home }}</a></li>
           {% for link in site.data.navigation.main %}
-            <li class="masthead__menu-item"><a href="{{ domain }}{{ link.url }}">{{ link.title }}</a></li>
+            <li class="masthead__menu-item"><a href="{{ current_path | relative_url }}{{ link.anchor }}">{{ ui.nav[link.key] }}</a></li>
           {% endfor %}
         </ul>
         <ul class="hidden-links hidden"></ul>
       </nav>
+      <a class="language-switcher" href="{{ language_path | relative_url }}" target="_self" rel="nofollow" aria-label="{{ ui.switch.aria }}" data-language-switch data-target="{{ language_path | relative_url }}">{{ ui.switch.label }}</a>
     </div>
   </div>
 </div>
