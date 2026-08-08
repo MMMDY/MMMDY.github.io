@@ -14,7 +14,7 @@ intro:
     宋文凤](https://buaaswf.github.io/).
   zh: >-
     我的研究兴趣包括大语言模型应用、LLM-as-a-judge、大语言模型后训练、可控内容生成和虚拟人。欢迎通过
-    [damiemie0@outlook.com](mailto:damiemie0@outlook.com) 与我联系。
+    [damiemie0@outlook.com](mailto:damiemie0@outlook.com) 联系。
 
     我目前在北京理工大学脑健康智能评估与干预教育部重点实验室攻读硕士学位，导师为[徐晨](https://bhelaborg.wpcomstaging.com/%E5%BE%90%E6%99%A8/)
     和[胡斌](https://bhelaborg.wpcomstaging.com/%E8%83%A1%E6%96%8C/)教授。
@@ -70,8 +70,8 @@ publications:
     classifications:
       - kind: "green"
         text:
-          en: "Preprint"
-          zh: "预印本"
+          en: ""
+          zh: ""
     title: "First, Do No Harm: AI Supervisor Scaffolds Novice Growth in Counselor Education"
     url: "https://arxiv.org/pdf/2508.09042"
     authors: "Chen Xu, <strong style=\"color: black;\">Zhenyu Lyu</strong>, Tian Lan, Yang Yi, Yu Ji, Luyao Ji, Jian Shen, Zhihua Wang, Leyang Cui, Jieshuo Zhang, Xiaohua Wan, Qunxi Dong, Minqiang Yang, Juan Wang, Xiuling Liu, Bin Hu"
@@ -79,8 +79,8 @@ publications:
       en: "First student author"
       zh: "第一学生作者"
     venue:
-      en: ""
-      zh: ""
+      en: "Preprint"
+      zh: "预印本"
     links:
       - key: "project"
         url: "https://mmmdy.github.io/first-do-no-harm.github.io/"
