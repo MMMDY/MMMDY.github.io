@@ -95,6 +95,10 @@
     vertical-align: -.1em;
 }
 
+.author-preview-tail {
+    white-space: nowrap;
+}
+
 .author-more {
     display: inline;
 
@@ -114,11 +118,15 @@
     }
 
     .more-label {
+        display: inline;
+        margin: 0;
         white-space: nowrap;
     }
 
     .author-rest {
         display: none;
+        margin: 0;
+        white-space: normal;
     }
 
     .author-toggle:focus-visible + .more-label {
