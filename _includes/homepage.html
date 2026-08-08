@@ -29,15 +29,15 @@
           <span style="background-color: #FCF8E3; color: black"><strong>{{ classification_text }}</strong></span>
         {% endif %}
       {% endfor %}
-      <a href="{{ paper.url }}">{{ paper.title }}</a><br>
-      {{ paper.authors }}<br>
+      <a href="{{ paper.url }}"><strong>{{ paper.title }}</strong></a><br>
+      <img class="publication-meta-icon" src="{{ '/assets/fonts/author_icon.png' | relative_url }}" alt="" aria-hidden="true">{{ paper.authors }}<br>
       {% assign author_note = paper.author_note[lang] %}
       {% if author_note %}
         <span style="background-color: #FCF8E3; color: black"><strong>{{ author_note }}</strong></span><br>
       {% endif %}
       {% assign venue = paper.venue[lang] %}
       {% if venue %}
-        <span style="background-color: #FCF8E3; color: black"><strong>{{ venue }}</strong></span>
+        <img class="publication-meta-icon" src="{{ '/assets/fonts/publication_source_icon.png' | relative_url }}" alt="" aria-hidden="true"><span style="background-color: #FCF8E3; color: black"><strong>{{ venue }}</strong></span>
       {% endif %}
 
       {% assign has_links = false %}

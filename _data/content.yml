@@ -43,8 +43,8 @@ publications:
       en: "Corresponding author/Second student author"
       zh: "通讯作者/第二学生作者"
     venue:
-      en: "ACL 2026 Main track Oral"
-      zh: "ACL 2026 Main track 受邀口头报告"
+      en: "ACL 2026 Main Oral"
+      zh: "ACL 2026 Main 口头汇报"
     links:
       - key: "project"
         url: ""
@@ -105,8 +105,8 @@ publications:
     classifications:
       - kind: "green"
         text:
-          en: "JCR Q1, CAS Category 1 Top"
-          zh: "JCR Q1，中科院一区 Top"
+          en: "JCR Q1, CAS Category 1 Top (IF=9.3)"
+          zh: "JCR Q1，中科院一区 Top (IF=9.3)"
     title: "Bridging the Gap Between Data Distribution and Model: Dynamic Data Distribution Optimization for Improving Critique Capabilities of Large Language Models"
     url: "https://www.sciencedirect.com/science/article/pii/S0957417425034931"
     authors: "Chen Xu<sup>*</sup>, Tian Lan<sup>*</sup>, <strong style=\"color: black;\">Zhenyu Lyu<sup>*</sup></strong>, Heyan Huang, Minqiang Yang, Qunxi Dong, Jieshuo Zhang, Bin Hu"
