@@ -1,5 +1,5 @@
 intro:
-  en: >-
+  en: |-
     My research interests include LLM applications, LLM-as-a-judge, post-training
     for LLMs, controllable content generation, and virtual humans. Please feel
     free to email me at [damiemie0@outlook.com](mailto:damiemie0@outlook.com).
@@ -12,7 +12,7 @@ intro:
     I graduated from the School of Computer at Beijing Information Science and
     Technology University with a bachelor's degree, advised by [Wenfeng Song
     宋文凤](https://buaaswf.github.io/).
-  zh: >-
+  zh: |-
     我的研究兴趣包括大语言模型应用、LLM-as-a-judge、大语言模型后训练、可控内容生成和虚拟人。欢迎通过
     [damiemie0@outlook.com](mailto:damiemie0@outlook.com) 联系。
 

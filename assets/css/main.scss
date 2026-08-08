@@ -95,6 +95,42 @@
     vertical-align: -.1em;
 }
 
+.author-more {
+    display: inline;
+
+    .author-toggle {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+    }
+
+    .more-label,
+    .author-rest {
+        color: #888;
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-underline-offset: 2px;
+    }
+
+    .author-rest {
+        display: none;
+    }
+
+    .author-toggle:focus-visible + .more-label {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+
+    .author-toggle:checked + .more-label {
+        display: none;
+    }
+
+    .author-toggle:checked ~ .author-rest {
+        display: inline;
+    }
+}
+
 $scroll_offset : 2em;
 h1:before, .anchor:before { 
     content: ''; 

@@ -11,6 +11,7 @@
 <h1>{{ ui.sections.publications }}</h1>
 
 {% for paper in content_data.publications %}
+  {% assign paper_index = forloop.index %}
   <div class="paper-box">
     <div class="paper-box-image">
       <div>
@@ -30,7 +31,10 @@
         {% endif %}
       {% endfor %}
       <a href="{{ paper.url }}"><strong>{{ paper.title }}</strong></a><br>
-      <img class="publication-meta-icon" src="{{ '/assets/fonts/author_icon.png' | relative_url }}" alt="" aria-hidden="true">{{ paper.authors }}<br>
+      {% assign author_list = paper.authors | split: ", " %}
+      {% assign author_count = author_list | size %}
+      {% assign visible_author_count = 5 %}
+      <img class="publication-meta-icon" src="{{ '/assets/fonts/author_icon.png' | relative_url }}" alt="" aria-hidden="true">{% if author_count > visible_author_count %}{% assign remaining_author_count = author_count | minus: visible_author_count %}{% assign remaining_authors = author_list | slice: visible_author_count, remaining_author_count %}{% for author in author_list limit: 5 %}{{ author }}{% unless forloop.last %}, {% endunless %}{% endfor %}, <span class="author-more"><input type="checkbox" id="author-more-{{ paper_index }}" class="author-toggle"><label for="author-more-{{ paper_index }}" class="more-label">{{ remaining_author_count }} More Authors</label><label for="author-more-{{ paper_index }}" class="author-rest">{% for author in remaining_authors %}{% if forloop.last %}{% if remaining_author_count > 1 %}and {% endif %}{{ author }}.{% else %}{{ author }}, {% endif %}{% endfor %}</label></span>{% else %}{{ paper.authors }}{% endif %}<br>
       {% assign author_note = paper.author_note[lang] %}
       {% if author_note %}
         <span style="background-color: #FCF8E3; color: black"><strong>{{ author_note }}</strong></span><br>
