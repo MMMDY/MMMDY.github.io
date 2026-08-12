@@ -118,6 +118,15 @@
   }
 }
 
+.page__visitor-counter {
+  margin-top: 3em;
+  padding: 1em 0;
+  border-top: 1px solid $border-color;
+  color: mix(#fff, $gray, 25%);
+  font-size: $type-size-6;
+  text-align: center;
+}
+
 .page__hero {
   position: relative;
   margin-bottom: 2em;
